@@ -112,18 +112,20 @@ class officeRemoteAuthController extends officeAuthController {
 					$data['remote_data'] = array('remote' => $this->config['remote']);
 					/** @var modUser $user */
 					if ($user = $this->modx->getObject('modUser', array('remote_key' => $data['id']))) {
-						$data['id'] = $user->get('id');
-						/** @var modProcessorResponse $response */
-						$response = $this->office->runProcessor('auth/update', $data);
-						if ($response->isError()) {
-							$errors = $this->formatProcessorErrors($response);
-							$this->modx->log(modX::LOG_LEVEL_ERROR, '[Office] Unable to update user "'.@$data['username'].'". Message: '.$errors);
-							$_SESSION['Office']['Auth']['error'] = $this->modx->lexicon('office_auth_err_update', array('errors' => $errors));
-						}
-						else {
-							$tmp = $response->getObject();
-							/** @var modUser $user */
-							$user = $this->modx->getObject('modUser', $tmp['id']);
+						if ($this->config['updateUser']) {
+							$data['id'] = $user->get('id');
+							/** @var modProcessorResponse $response */
+							$response = $this->office->runProcessor('auth/update', $data);
+							if ($response->isError()) {
+								$errors = $this->formatProcessorErrors($response);
+								$this->modx->log(modX::LOG_LEVEL_ERROR, '[Office] Unable to update user "'.@$data['username'].'". Message: '.$errors);
+								$_SESSION['Office']['Auth']['error'] = $this->modx->lexicon('office_auth_err_update', array('errors' => $errors));
+							}
+							else {
+								$tmp = $response->getObject();
+								/** @var modUser $user */
+								$user = $this->modx->getObject('modUser', $tmp['id']);
+							}
 						}
 					}
 					elseif ($this->config['createUser']) {

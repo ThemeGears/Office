@@ -1,5 +1,9 @@
 Changelog for Office.
 
+1.0.0-pl1
+==============
+- Fixed parameter "updateUser" in remote auth controller.
+
 1.0.0-pl
 ==============
 - [Auth] Ability to use regular user names, not email.
