@@ -24,11 +24,3 @@ OfficeMS2.utils.formatDate = function(string) {
 		return '&nbsp;';
 	}
 };
-
-OfficeMS2.utils.userLink = function(val,cell,row) {
-	if (!val) {return '';}
-	var action = MODx.action ? MODx.action['security/user/update'] : 'security/user/update';
-	var url = 'index.php?a='+action+'&id='+row.data['user_id'];
-
-	return '<a href="' + url + '" target="_blank" class="ms2-link">' + val + '</a>'
-};

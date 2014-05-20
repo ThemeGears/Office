@@ -33,7 +33,23 @@ ul.x-tab-strip-top {
 	padding: 0 !important;
 }
 
+*[class*="x-"] {
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+}
+
+.x-panel-btns .x-btn-mc em > button {min-width: 54px;}
+.x-panel label.desc-under {font-weight: normal; padding-top: 5px;}
+.x-panel .disabled {color: #AAA !important;}
+.x-btn-mc em, .x-tab-strip em {font-style: normal;}
+.ext-strict .x-form-field-trigger-wrap input.x-form-text {border:none;}
+
 #office-preloader {
 	background: url(images/preloader.gif) center no-repeat;
 	height: 128px;
 }
+
+ul.x-row-actions {margin:0; padding: 0;}
+ul.x-row-actions li {float:left;}
+ul.x-row-actions .btn {padding: 5px;margin-right:5px;}

@@ -11,7 +11,7 @@ OfficeMS2.panel.Orders = function(config) {
 			,border: false
 			,title: ''
 			,preventRender: true
-			,width: '97%'
+			//,width: '97%'
 		}]
 	});
 	OfficeMS2.panel.Orders.superclass.constructor.call(this,config);
@@ -52,23 +52,25 @@ OfficeMS2.grid.Orders = function(config) {
 		}
 	});
 	OfficeMS2.grid.Orders.superclass.constructor.call(this,config);
-	this._makeTemplates();
-	this.on('click', this.onClick, this);
 };
 Ext.extend(OfficeMS2.grid.Orders,MODx.grid.Grid,{
 	windows: {}
 
-	,_makeTemplates: function() {
-		this.tplActions = new Ext.XTemplate(''
-			+'<div class="row-details-column">'
-			+'<a href="#" class="controlBtn details" onclick="return false;" title="'+_('office_ms2_menu_details')+'">'+_('office_ms2_menu_details')+'</a>'
-			+'</div>'
-			,{compiled: true}
-		);
-	}
+	,_renderActions: function(value, props, row) {
+		var actions = {
+			viewOrder: {class: 'mx-icon mx-icon-info-circle', active: true}
+		};
+		var res = [];
+		for (var i in actions) {
+			if (!actions.hasOwnProperty(i) || !actions[i]['active']) {continue;}
+			res.push(
+				'<li>' +
+					'<button class="'+actions[i]['class']+' btn btn-default" type="'+i+'" title="'+_('office_ms2_' + i)+'"></button>' +
+				'</li>'
+			);
+		}
 
-	,_renderActions: function(v,md,rec) {
-		return this.tplActions.apply(rec.data);
+		return '<ul class="x-row-actions">' + res.join('') + '</ul>';
 	}
 
 	/*
@@ -82,16 +84,13 @@ Ext.extend(OfficeMS2.grid.Orders,MODx.grid.Grid,{
 	}
 	*/
 
-	,onClick: function(e) {
-		var t = e.getTarget();
-		var elm = t.className.split(' ')[0];
-		if (elm == 'controlBtn') {
-			var action = t.className.split(' ')[1];
-			this.menu.record = this.getSelectionModel().getSelected();
-			switch (action) {
-				case 'details': this.viewOrder(this,e); break;
-			}
+	,onClick: function(e){
+		var elem = e.getTarget();
+		if (elem.nodeName == 'BUTTON') {
+			this.menu.record = this.getSelectionModel().getSelected().data;
+			return this[elem.getAttribute('type')](this,e);
 		}
+		return this.processEvent('click', e);
 	}
 
 	,getColumns: function() {
@@ -112,7 +111,7 @@ Ext.extend(OfficeMS2.grid.Orders,MODx.grid.Grid,{
 			//,context: {width: 50, sortable: true}
 			,customer: {width: 150, sortable: true}
 			,receiver: {width: 150, sortable: true}
-			,details: {width: 50, renderer: {fn:this._renderActions,scope:this}}
+			,actions: {width: 50, renderer: {fn:this._renderActions, scope:this}}
 		};
 
 		var columns = [];
@@ -219,12 +218,14 @@ OfficeMS2.window.ViewOrder = function(config) {
 		,resizable: false
 		,maximizable: false
 		,collapsible: false
+		,allowDrop: false
 		,fields: {
 			xtype: 'modx-tabs'
 			,activeTab: config.activeTab || 0
-			,bodyStyle: { background: 'transparent'}
+			,bodyStyle: {background: 'transparent', padding: '10px', margin: 0}
 			,deferredRender: false
-			,autoHeight: true
+			//,autoHeight: true
+			,border: true
 			,stateful: true
 			,stateId: 'minishop2-window-order-details'
 			,stateEvents: ['tabchange']
@@ -242,12 +243,12 @@ Ext.extend(OfficeMS2.window.ViewOrder,MODx.Window, {
 		var tabs = [{
 			title: _('office_ms2_order')
 			,hideMode: 'offsets'
-			,bodyStyle: 'padding:5px 0;'
 			,defaults: {msgTarget: 'under',border: false}
 			,items: this.getOrderFields(config)
 		},{
-			xtype: 'minishop2-grid-order-products'
-			,title: _('office_ms2_order_products')
+			title: _('office_ms2_order_products')
+			,xtype: 'minishop2-grid-order-products'
+			,hideMode: 'offsets'
 			,order_id: config.order_id
 		}];
 
@@ -257,7 +258,6 @@ Ext.extend(OfficeMS2.window.ViewOrder,MODx.Window, {
 				layout: 'form'
 				,title: _('office_ms2_address')
 				,hideMode: 'offsets'
-				,bodyStyle: 'padding:5px 0;'
 				,defaults: {msgTarget: 'under',border: false}
 				,items: address
 			});
@@ -439,6 +439,7 @@ Ext.extend(OfficeMS2.grid.Products,MODx.grid.Grid, {
 
 	productLink: function(val,cell,row) {
 		if (!val) {return '';}
+		else if (!row.data['url']) {return val;}
 		var url = row.data['url'];
 
 		return '<a href="' + url + '" target="_blank" class="ms2-link">' + val + '</a>'
@@ -447,7 +448,8 @@ Ext.extend(OfficeMS2.grid.Products,MODx.grid.Grid, {
 	,getColumns: function() {
 		var fields = {
 			id: {hidden: true, sortable: true, width: 40}
-			,product_pagetitle: {header: _('office_ms2_product'), width: 100, renderer: this.productLink}
+			,product_id: {hidden: true, sortable: true, width: 40}
+			,name: {header: _('office_ms2_product'), width: 100, renderer: this.productLink}
 			,product_weight: {header: _('office_ms2_product_weight'), width: 50}
 			,product_price: {header: _('office_ms2_product_price'), width: 50}
 			,article: {width: 50}

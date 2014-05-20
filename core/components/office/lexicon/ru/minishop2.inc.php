@@ -51,3 +51,6 @@ $_lang['office_ms2_street'] = 'Улица';
 $_lang['office_ms2_building'] = 'Здание';
 $_lang['office_ms2_room'] = 'Комната';
 $_lang['office_ms2_comment'] = 'Комментарий';
+
+$_lang['office_ms2_actions'] = 'Действия';
+$_lang['office_ms2_viewOrder'] = 'Подробности';

@@ -1,8 +1,11 @@
 Changelog for Office.
 
-1.0.0-pl1
+1.0.1-pl
 ==============
 - Fixed parameter "updateUser" in remote auth controller.
+- Fixed deafult system setting "office_ms2_order_product_fields".
+- Updated miniShop2 controller and Ext JS grid for version 2.1.8.
+- Updated Ext JS modx-theme.
 
 1.0.0-pl
 ==============

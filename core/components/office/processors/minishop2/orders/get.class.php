@@ -29,13 +29,17 @@ class msOrderGetProcessor extends modObjectGetProcessor {
 		$order_fields = array_intersect($order_fields, array_keys($this->modx->getFieldMeta('msOrder')));
 		if (!in_array('cost', $order_fields)) {$order_fields[] = 'cost';}
 		unset($order_fields['comment']);
-		$order = array();
+
+		$array = array();
 		foreach ($order_fields as $v) {
-			$order[$v] = ($v == 'createdon' || $v == 'updatedon') ? $this->formatDate($this->object->get($v)) : $this->object->get($v);
+			$array[$v] = ($v == 'createdon' || $v == 'updatedon')
+				? $this->formatDate($this->object->get($v))
+				: $this->object->get($v);
 		}
 
-		$profile = $this->object->getOne('UserProfile');
-		$array = array_merge($order, array('fullname' => $profile->get('fullname')));
+		if ($profile = $this->object->getOne('UserProfile')) {
+			$array = array_merge($array, array('fullname' => $profile->get('fullname')));
+		}
 
 		if (in_array('status', $order_fields) && $tmp = $this->object->getOne('Status')) {$array['status'] = $tmp->get('name');}
 		if (in_array('delivery', $order_fields) && $tmp = $this->object->getOne('Delivery')) {$array['delivery'] = $tmp->get('name');}
@@ -44,9 +48,10 @@ class msOrderGetProcessor extends modObjectGetProcessor {
 		$address_fields = array_map('trim', explode(',', $this->modx->getOption('office_ms2_order_address_fields', null, '', true)));
 		$address_fields = array_intersect($address_fields, array_keys($this->modx->getFieldMeta('msOrderAddress')));
 		/* @var msOrderAddress $address */
-		$address = $this->object->getOne('Address');
-		foreach ($address_fields as $v) {
-			$array['addr_'.$v] = $address->get($v);
+		if ($address = $this->object->getOne('Address')) {
+			foreach ($address_fields as $v) {
+				$array['addr_'.$v] = $address->get($v);
+			}
 		}
 
 		$array = array_map('strip_tags', $array);
