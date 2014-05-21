@@ -50,6 +50,6 @@ ul.x-tab-strip-top {
 	height: 128px;
 }
 
-ul.x-row-actions {margin:0; padding: 0;}
-ul.x-row-actions li {float:left;}
-ul.x-row-actions .btn {padding: 5px;margin-right:5px;}
+ul.office-row-actions {margin:0; padding: 0; list-style: none;}
+ul.office-row-actions li {float:left;}
+ul.office-row-actions .btn {padding: 5px;margin-right:5px;}

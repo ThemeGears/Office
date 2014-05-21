@@ -58,7 +58,7 @@ Ext.extend(OfficeMS2.grid.Orders,MODx.grid.Grid,{
 
 	,_renderActions: function(value, props, row) {
 		var actions = {
-			viewOrder: {class: 'mx-icon mx-icon-info-circle', active: true}
+			viewOrder: {class: 'off-icon off-icon-info-circle', active: true}
 		};
 		var res = [];
 		for (var i in actions) {
@@ -70,7 +70,7 @@ Ext.extend(OfficeMS2.grid.Orders,MODx.grid.Grid,{
 			);
 		}
 
-		return '<ul class="x-row-actions">' + res.join('') + '</ul>';
+		return '<ul class="office-row-actions">' + res.join('') + '</ul>';
 	}
 
 	/*
