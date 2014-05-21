@@ -10,15 +10,27 @@ class msOrderGetListProcessor extends modObjectGetListProcessor {
 	public $defaultSortField = 'id';
 	public $defaultSortDirection  = 'DESC';
 	public $languageTopics = array('default','minishop2:manager');
+	/** @var  miniShop2 $ms2 */
+	protected $ms2;
+
+
+	public function initialize() {
+		$this->ms2 = $this->modx->getService('miniShop2');
+
+		return parent::initialize();
+	}
 
 
 	public function prepareQueryBeforeCount(xPDOQuery $c) {
 		$c->where(array('user_id' => $this->modx->user->id));
 
 		$all = array_keys($this->modx->getFieldMeta('msOrder'));;
-		$enabled = array_map('trim', explode(',', $this->modx->getOption('office_ms2_order_grid_fields', null, 'id,num,status,cost,weight,delivery,payment,createdon,updatedon', true)));
-		$tmp = array_intersect($enabled, $all); unset($tmp['comment']);
+		$enabled = array_map('trim', explode(',', $this->modx->getOption('office_ms2_order_grid_fields', null, 'id,num,status,cost,weight,delivery,payment,createdon,updatedon,type', true)));
+		$tmp = array_intersect($enabled, $all);
+		unset($tmp['comment']);
 		if (!in_array('id', $tmp)) {$tmp[] = 'id';}
+		if (!in_array('type', $tmp)) {$tmp[] = 'type';}
+
 		$c->select($this->modx->getSelectColumns('msOrder', 'msOrder', '', $tmp));
 
 		if (in_array('status', $enabled)) {
@@ -94,14 +106,14 @@ class msOrderGetListProcessor extends modObjectGetListProcessor {
 	}
 
 	public function prepareArray(array $data) {
-		$data['status'] = '<span style="color:#'.$data['color'].';">'.$data['status'].'</span>';
-		unset($data['color']);
-		if (isset($data['cost'])) {$data['cost'] = round($data['cost'],2);}
-		if (isset($data['cart_cost'])) {$data['cart_cost'] = round($data['cart_cost'],2);}
-		if (isset($data['delivery_cost'])) {$data['delivery_cost'] = round($data['delivery_cost'],2);}
-		if (isset($data['weight'])) {$data['weight'] = round($data['weight'],3);}
-
 		$data = array_map('strip_tags', $data);
+		if (isset($data['cost'])) {$data['cost'] = $this->ms2->formatPrice($data['cost']);}
+		if (isset($data['cart_cost'])) {$data['cart_cost'] = $this->ms2->formatPrice($data['cart_cost']);}
+		if (isset($data['delivery_cost'])) {$data['delivery_cost'] = $this->ms2->formatPrice($data['delivery_cost']);}
+		if (isset($data['weight'])) {$data['weight'] = $this->ms2->formatWeight($data['weight']);}
+		if (isset($data['status'])) {$data['status'] = '<span style="color:#'.$data['color'].';">'.$data['status'].'</span>';}
+		unset($data['color']);
+
 		return $data;
 	}
 

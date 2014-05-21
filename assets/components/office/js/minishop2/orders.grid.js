@@ -73,6 +73,12 @@ Ext.extend(OfficeMS2.grid.Orders,MODx.grid.Grid,{
 		return '<ul class="office-row-actions">' + res.join('') + '</ul>';
 	}
 
+	,_renderCost:function(v,md,rec) {
+		return rec.data.type && rec.data.type == 1
+			? '-'+v
+			: v;
+	}
+
 	/*
 	,getMenu: function() {
 		var m = [];
@@ -100,7 +106,7 @@ Ext.extend(OfficeMS2.grid.Orders,MODx.grid.Grid,{
 			,createdon: {width: 75, sortable: true, renderer: OfficeMS2.utils.formatDate}
 			,updatedon: {width: 75, sortable: true, renderer: OfficeMS2.utils.formatDate}
 			,num: {width: 50, sortable: true}
-			,cost: {width: 75, sortable: true}
+			,cost: {width: 75, sortable: true, renderer: this._renderCost}
 			,cart_cost: {width: 75, sortable: true}
 			,delivery_cost: {width: 75, sortable: true}
 			,weight: {width: 50, sortable: true}

@@ -68,7 +68,7 @@ class officeMS2Controller extends officeDefaultController {
 
 	public function setConfig() {
 		$grid_fields = array_map('trim', explode(',', $this->modx->getOption('office_ms2_order_grid_fields', null, 'num,status,cost,weight,delivery,payment,createdon,updatedon', true)));
-		$grid_fields = array_unique(array_merge($grid_fields, array('id','actions')));
+		$grid_fields = array_unique(array_merge($grid_fields, array('id','type','actions')));
 
 		$order_fields = array_map('trim', explode(',', $this->modx->getOption('office_ms2_order_form_fields')));
 		$address_fields = array_map('trim', explode(',', $this->modx->getOption('office_ms2_order_address_fields')));

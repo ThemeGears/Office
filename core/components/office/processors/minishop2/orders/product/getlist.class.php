@@ -5,6 +5,14 @@ class msProductGetListProcessor extends modObjectGetListProcessor {
 	public $defaultSortField = 'id';
 	public $defaultSortDirection  = 'ASC';
 	public $languageTopics = array('minishop2:product');
+	/** @var  miniShop2 $ms2 */
+	protected $ms2;
+
+	public function initialize() {
+		$this->ms2 = $this->modx->getService('miniShop2');
+
+		return parent::initialize();
+	}
 
 	public function prepareQueryBeforeCount(xPDOQuery $c) {
 		$c->innerJoin('msOrder','msOrder', '`msOrderProduct`.`order_id` = `msOrder`.`id`');
@@ -34,8 +42,12 @@ class msProductGetListProcessor extends modObjectGetListProcessor {
 
 		foreach ($fields as $v) {
 			$data[$v] = $object->get($v);
-			if ($v == 'product_price' || $v == 'product_old_price') {$data[$v] = round($data[$v],2);}
-			else if ($v == 'product_weight') {$data[$v] = round($data[$v],3);}
+			if ($v == 'product_price' || $v == 'product_old_price' || $v == 'price' || $v == 'cost') {
+				$data[$v] = $this->ms2->formatPrice($data[$v]);
+			}
+			elseif ($v == 'product_weight') {
+				$data[$v] = $this->ms2->formatWeight($data[$v]);
+			}
 		}
 
 		$options = $object->get('options');

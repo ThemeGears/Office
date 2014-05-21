@@ -4,6 +4,8 @@ class msOrderGetProcessor extends modObjectGetProcessor {
 	public $classKey = 'msOrder';
 	public $languageTopics = array('minishop2:default');
 	public $permission = '';
+	/** @var  miniShop2 $ms2 */
+	protected $ms2;
 
 
 	/**
@@ -19,6 +21,7 @@ class msOrderGetProcessor extends modObjectGetProcessor {
 		if ($this->checkViewPermission && $this->object instanceof modAccessibleObject && !$this->object->checkPolicy('view')) {
 			return $this->modx->lexicon('access_denied');
 		}
+		$this->ms2 = $this->modx->getService('miniShop2');
 
 		return true;
 	}
@@ -32,9 +35,18 @@ class msOrderGetProcessor extends modObjectGetProcessor {
 
 		$array = array();
 		foreach ($order_fields as $v) {
-			$array[$v] = ($v == 'createdon' || $v == 'updatedon')
-				? $this->formatDate($this->object->get($v))
-				: $this->object->get($v);
+			if ($v == 'createdon' || $v == 'updatedon') {
+				$array[$v] = $this->ms2->formatDate($this->object->get($v));
+			}
+			elseif ($v == 'cost' || $v == 'cart_cost' || $v == 'delivery_cost') {
+				$array[$v] = $this->ms2->formatPrice($this->object->get($v));
+			}
+			elseif ($v == 'weight') {
+				$array[$v] = $this->ms2->formatWeight($this->object->get($v));
+			}
+			else {
+				$array[$v] = $this->object->get($v);
+			}
 		}
 
 		if ($profile = $this->object->getOne('UserProfile')) {

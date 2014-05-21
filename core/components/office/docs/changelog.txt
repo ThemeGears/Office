@@ -7,6 +7,7 @@ Changelog for Office.
 - Updated miniShop2 controller and Ext JS grid for version 2.1.8.
 - Updated Ext JS modx-theme.
 - Added Font Awesome 4.1 for modx-theme.
+- Improved format of weight and price in MS2 grid.
 
 1.0.0-pl
 ==============
