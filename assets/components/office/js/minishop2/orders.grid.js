@@ -58,7 +58,7 @@ Ext.extend(OfficeMS2.grid.Orders,MODx.grid.Grid,{
 
 	,_renderActions: function(value, props, row) {
 		var actions = {
-			viewOrder: {class: 'off-icon off-icon-info-circle', active: true}
+			viewOrder: {class: 'fa fa-info-circle', active: true}
 		};
 		var res = [];
 		for (var i in actions) {

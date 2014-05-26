@@ -299,7 +299,7 @@ class Office {
 			$file = 'css/'.$file.'.css';
 			file_put_contents($this->config['assetsPath'] . $file, $css);
 			if (file_exists($this->config['assetsPath'] . $file)) {
-				$this->modx->regClientScript($this->config['assetsUrl'] . $file);
+				$this->modx->regClientCSS($this->config['assetsUrl'] . $file);
 				return true;
 			}
 		}
@@ -364,8 +364,12 @@ class Office {
 		$this->modx->regClientCSS($this->config['cssUrl'] . 'main/lib/ext-all-notheme.css');
 
 		$config = $this->makePlaceholders($this->config);
-		if ($css = $this->modx->getOption('office_extjs_css', null, $this->config['cssUrl'] . 'main/lib/xtheme-modx.css', true)) {
+		if ($css = $this->modx->getOption('office_extjs_css')) {
 			$this->modx->regClientCSS(str_replace($config['pl'], $config['vl'], $css));
+		}
+		else {
+			$this->modx->regClientCSS($this->config['cssUrl'] . 'main/lib/xtheme-modx.min.css');
+			$this->modx->regClientCSS($this->config['cssUrl'] . 'main/lib/font-awesome.min.css');
 		}
 
 		$this->addClientJs(array(

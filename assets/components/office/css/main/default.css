@@ -42,8 +42,18 @@ ul.x-tab-strip-top {
 .x-panel-btns .x-btn-mc em > button {min-width: 54px;}
 .x-panel label.desc-under {font-weight: normal; padding-top: 5px;}
 .x-panel .disabled {color: #AAA !important;}
+.x-panel-mc .x-panel-tbar .x-toolbar {background: transparent !important;}
 .x-btn-mc em, .x-tab-strip em {font-style: normal;}
 .ext-strict .x-form-field-trigger-wrap input.x-form-text {border:none;}
+.x-mask-loading.x-mask-loading-empty div {
+	padding: 2px !important;
+	background-repeat: no-repeat !important;
+	background-position: 0 0;
+	height: 16px;
+	width: 16px;
+}
+.x-mask-loading.x-mask-loading-empty {border-color: transparent;}
+
 
 #office-preloader {
 	background: url(images/preloader.gif) center no-repeat;
