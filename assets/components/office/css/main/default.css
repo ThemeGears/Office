@@ -62,4 +62,5 @@ ul.x-tab-strip-top {
 
 ul.office-row-actions {margin:0; padding: 0; list-style: none;}
 ul.office-row-actions li {float:left;}
-ul.office-row-actions .btn {padding: 5px;margin-right:5px;}
+ul.office-row-actions .btn {padding: 5px; margin-right:5px; min-width:26px;}
+.x-grid3-col-actions {padding: 7px 0 0 7px !important;}

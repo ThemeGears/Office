@@ -117,7 +117,7 @@ Ext.extend(OfficeMS2.grid.Orders,MODx.grid.Grid,{
 			//,context: {width: 50, sortable: true}
 			,customer: {width: 150, sortable: true}
 			,receiver: {width: 150, sortable: true}
-			,actions: {width: 50, renderer: {fn:this._renderActions, scope:this}}
+			,actions: {width: 50, renderer: this._renderActions, id: 'actions'}
 		};
 
 		var columns = [];
