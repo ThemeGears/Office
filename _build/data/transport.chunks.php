@@ -23,6 +23,10 @@ $tmp = array(
 		'file' => 'auth.activate',
 		'description' => '',
 	),
+	'tpl.Office.auth.register' => array(
+		'file' => 'auth.register',
+		'description' => '',
+	),
 	'tpl.Office.profile.form' => array(
 		'file' => 'profile.form',
 		'description' => '',

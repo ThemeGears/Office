@@ -1,13 +1,16 @@
 Changelog for Office.
 
-1.0.1-pl
+1.1.0-beta
 ==============
-- Fixed parameter "updateUser" in remote auth controller.
-- Fixed deafult system setting "office_ms2_order_product_fields".
-- Updated miniShop2 controller and Ext JS grid for version 2.1.8.
-- Updated Ext JS modx-theme.
-- Added Font Awesome 4.1 for modx-theme.
-- Improved format of weight and price in MS2 grid.
+- [Main] Updated Ext JS modx-theme.
+- [Main] Added Font Awesome 4.1 for modx-theme.
+- [miniShop2] Updated miniShop2 controller and Ext JS grid for version 2.1.8.
+- [miniShop2] Improved format of weight and price in MS2 grid.
+- [miniShop2] Fixed default system setting "office_ms2_order_product_fields".
+- [Auth] Ability to use password for login.
+- [Auth] New login form.
+- [Profile] Ability to change password.
+- [Remote] Fixed parameter "updateUser" in remote auth controller.
 
 1.0.0-pl
 ==============

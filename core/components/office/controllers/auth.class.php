@@ -15,24 +15,25 @@ class officeAuthController extends officeDefaultController {
 		}
 		else {
 			$this->config = array_merge(array(
-				'tplLogin' => 'tpl.Office.auth.login'
-				,'tplLogout' => 'tpl.Office.auth.logout'
-				,'tplActivate' => 'tpl.Office.auth.activate'
+				'tplLogin' => 'tpl.Office.auth.login',
+				'tplLogout' => 'tpl.Office.auth.logout',
+				'tplActivate' => 'tpl.Office.auth.activate',
+				'tplRegister' => 'tpl.Office.auth.register',
 
-				,'siteUrl' => $this->modx->getOption('site_url')
-				,'linkTTL' => 600
-				,'page_id' => $this->modx->getOption('office_auth_page_id')
+				'siteUrl' => $this->modx->getOption('site_url'),
+				'linkTTL' => 600,
+				'page_id' => $this->modx->getOption('office_auth_page_id'),
 
-				,'groups' => ''
-				,'loginResourceId' => 0
-				,'logoutResourceId' => 0
-				,'rememberme' => true
-				,'loginContext' => ''
-				,'addContexts' => ''
+				'groups' => '',
+				'loginResourceId' => 0,
+				'logoutResourceId' => 0,
+				'rememberme' => true,
+				'loginContext' => '',
+				'addContexts' => '',
 
-				,'HybridAuth' => true
-				,'providerTpl' => 'tpl.HybridAuth.provider'
-				,'activeProviderTpl' => 'tpl.HybridAuth.provider.active'
+				'HybridAuth' => true,
+				'providerTpl' => 'tpl.HybridAuth.provider',
+				'activeProviderTpl' => 'tpl.HybridAuth.provider.active',
 			), $config);
 		}
 
@@ -127,6 +128,115 @@ class officeAuthController extends officeDefaultController {
 
 
 	/**
+	 * Login existing user or reset his password
+	 *
+	 * @param array $data
+	 *
+	 * @return array|string
+	 */
+	public function formLogin($data = array()) {
+		// Check user status
+		if ($this->modx->user->isAuthenticated($this->modx->context->key)) {
+			return $this->success(
+				$this->modx->lexicon('office_auth_err_already_logged'),
+				array('refresh' => $this->_getLoginLink())
+			);
+		}
+		// Check email
+		$email = strtolower(trim(@$data['email']));
+		if (empty($email)) {
+			return $this->error($this->modx->lexicon('office_auth_err_email_ns'));
+		}
+		/** @var modUserProfile $profile */
+		if ($profile = $this->modx->getObject('modUserProfile', array('email' => $email))) {
+			/** @var modUser $user */
+			$user = $profile->getOne('User');
+			if (!$user->get('active')) {
+				return $this->error($this->modx->lexicon('office_auth_err_user_active'));
+			}
+
+			$password = trim(@$data['password']);
+			// If user did not send password - he wants to reset it
+			if (empty($password)) {
+				return $this->_resetPassword($email);
+			}
+
+			// Otherwise we try to login
+			$login_data = array(
+				'username' => $user->get('username'),
+				'password' => $password,
+				'rememberme' => $this->config['rememberme'],
+				'login_context' => $this->config['loginContext'],
+			);
+			if (!empty($this->config['addContexts'])) {
+				$login_data['add_contexts'] = $this->config['addContexts'];
+			}
+
+			$response = $this->modx->runProcessor('security/login', $login_data);
+			if ($response->isError()) {
+				$errors = $this->_formatProcessorErrors($response);
+				$this->modx->log(modX::LOG_LEVEL_ERROR, '[Office] unable to login user '.$data['email'].'. Message: '.$errors);
+
+				return $this->error($this->modx->lexicon('office_auth_err_login', array('errors' => $errors)));
+			}
+			else {
+				return $this->success(
+					$this->modx->lexicon('office_auth_success'),
+					array('refresh' => $this->_getLoginLink())
+				);
+			}
+		}
+		else {
+			return $this->error($this->modx->lexicon('office_auth_err_email_nf'));
+		}
+	}
+
+
+	/**
+	 * Create new user and confirm his email
+	 *
+	 * @param $data
+	 *
+	 * @return array|string
+	 */
+	public function formRegister($data) {
+		// Check user status
+		if ($this->modx->user->isAuthenticated($this->modx->context->key)) {
+			return $this->success(
+				$this->modx->lexicon('office_auth_err_already_logged'),
+				array('refresh' => $this->_getLoginLink())
+			);
+		}
+		// Check username
+		$username = trim(@$data['username']);
+		if (!empty($username) && !preg_match('/^[^\'\\x3c\\x3e\\(\\);\\x22]+$/', $username)) {
+			return $this->error($this->modx->lexicon('office_auth_err_username_invalid'));
+		}
+		// Check email
+		$email = strtolower(trim(@$data['email']));
+		if (empty($email)) {
+			return $this->error($this->modx->lexicon('office_auth_err_email_ns'));
+		}
+		elseif ($this->modx->getCount('modUserProfile', array('email' => $email))) {
+			return $this->error($this->modx->lexicon('office_auth_err_user_exists'));
+		}
+		// Check password
+		$password = trim(@$data['password']);
+		if (!empty($password)) {
+			$req = $this->modx->getOption('password_min_length', null, 6);
+			if (strlen($password) < $req) {
+				return $this->error($this->modx->lexicon('office_auth_err_password_short', array('req' => $req)));
+			}
+			elseif (!preg_match('/^[^\'\\x3c\\x3e\\(\\);\\x22]+$/', $password)) {
+				return $this->error($this->modx->lexicon('office_auth_err_password_invalid'));
+			}
+		}
+
+		return $this->_createUser($email, $username, $password);
+	}
+
+
+	/**
 	 * Check email of user and start login process
 	 *
 	 * @param array $data
@@ -138,7 +248,7 @@ class officeAuthController extends officeDefaultController {
 		if ($this->modx->user->isAuthenticated($this->modx->context->key)) {
 			return $this->success(
 				$this->modx->lexicon('office_auth_err_already_logged')
-				,array('refresh' => $this->modx->makeUrl($this->config['loginResourceId'], '', '', 'full'))
+				,array('refresh' => $this->_getLoginLink())
 			);
 		}
 		if (empty($email)) {
@@ -149,121 +259,10 @@ class officeAuthController extends officeDefaultController {
 		}
 
 		if ($this->modx->getCount('modUserProfile', array('email' => $email))) {
-			return $this->sendMail($email);
+			return $this->_resetPassword($email);
 		}
 		else {
-			return $this->createUser($email);
-		}
-	}
-
-
-	/**
-	 * Generate new password and send activation link for existing user
-	 *
-	 * @param $email
-	 *
-	 * @return array|string
-	 */
-	public function sendMail($email) {
-		/** @var modUser $user */
-		$q = $this->modx->newQuery('modUser');
-		$q->innerJoin('modUserProfile', 'modUserProfile', 'modUser.id = modUserProfile.internalKey');
-		//$q->where(array('modUser.username' => $email, 'OR:modUserProfile.email:=' => $email));
-		$q->where(array('modUserProfile.email' => $email));
-		$q->select($this->modx->getSelectColumns('modUser','modUser') . ',`modUserProfile`.`email`');
-		if (!$user = $this->modx->getObject('modUser', $q)) {
-			return $this->error($this->modx->lexicon('office_auth_err_email_nf'));
-		}
-		elseif ($user->sudo) {
-			return $this->error($this->modx->lexicon('office_auth_err_sudo_user'));
-		}
-
-		$activationHash = md5(uniqid(md5($user->email . '/' . $user->id), true));
-
-		/** @var modDbRegister $registry */
-		$registry = $this->modx->getService('registry', 'registry.modRegistry')->getRegister('user', 'registry.modDbRegister');
-		$registry->connect();
-
-		// checking for already sent activation link
-		$registry->subscribe('/pwd/reset/' . md5($user->username));
-		$res = $registry->read(array('poll_limit' => 1, 'remove_read' => false));
-		if (!empty($res)) {
-			return $this->error($this->modx->lexicon('office_auth_err_already_sent'));
-		}
-
-		$registry->subscribe('/pwd/reset/');
-		$registry->send('/pwd/reset/', array(md5($user->username) => $activationHash), array('ttl' => $this->config['linkTTL']));
-
-		$newPassword = $user->generatePassword();
-
-		$user->set('cachepwd', $newPassword);
-		$user->save();
-
-		/* send activation email */
-		$id = !empty($this->config['loginResourceId'])
-			? $this->config['loginResourceId']
-			: (!empty($_REQUEST['pageId'])
-				? $_REQUEST['pageId']
-				: $this->modx->getOption('site_start')
-			);
-
-		$link = $this->modx->makeUrl($id, '', array(
-				'action' => 'auth/login'
-				,'email' => $email
-				,'hash' => $activationHash.':'.$newPassword
-			), 'full');
-
-		$content = $this->modx->getChunk(
-			$this->config['tplActivate']
-			,array_merge(
-				$user->getOne('Profile')->toArray()
-				,$user->toArray()
-				,array('link' => $link)
-			)
-		);
-		$maxIterations= (integer) $this->modx->getOption('parser_max_iterations', null, 10);
-		$this->modx->getParser()->processElementTags('', $content, false, false, '[[', ']]', array(), $maxIterations);
-		$this->modx->getParser()->processElementTags('', $content, true, true, '[[', ']]', array(), $maxIterations);
-		$send = $user->sendEmail(
-			$content
-			,array(
-				'subject' => $this->modx->lexicon('office_auth_email_subject')
-			)
-		);
-
-		if ($send !== true) {
-			$errors = $this->modx->mail->mailer->errorInfo;
-			$this->modx->log(modX::LOG_LEVEL_ERROR, '[Office] Unable to send email to '.$email.'. Message: '.$errors);
-			return $this->error($this->modx->lexicon('office_auth_err_send', array('errors' => $errors)));
-		}
-
-		return $this->success($this->modx->lexicon('office_auth_email_send'));
-	}
-
-
-	/**
-	 * Create new user and send activation email
-	 *
-	 * @param $email
-	 *
-	 * @return array|string
-	 */
-	public function createUser($email) {
-		$response = $this->office->runProcessor('auth/create', array(
-			'username' => $email
-			,'email' => $email
-			,'active' => false
-			,'blocked' => false
-			,'groups' => $this->config['groups']
-		));
-
-		if ($response->isError()) {
-			$errors = $this->formatProcessorErrors($response);
-			$this->modx->log(modX::LOG_LEVEL_ERROR, '[Office] Unable to create user '.$email.'. Message: '.$errors);
-			return $this->error($this->modx->lexicon('office_auth_err_create', array('errors' => $errors)));
-		}
-		else {
-			return $this->sendMail($email);
+			return $this->_createUser($email);
 		}
 	}
 
@@ -278,23 +277,24 @@ class officeAuthController extends officeDefaultController {
 	public function Login($data) {
 		/** @var modUser $user */
 		$q = $this->modx->newQuery('modUser');
-		$q->innerJoin('modUserProfile', 'modUserProfile', 'modUser.id = modUserProfile.internalKey');
+		$q->innerJoin('modUserProfile', 'Profile');
 		//$q->where(array('modUser.username' => @$data['email'], 'OR:modUserProfile.email:=' => @$data['email']));
-		$q->where(array('modUserProfile.email' => @$data['email']));
+		$q->where(array('Profile.email' => @$data['email']));
+
 		if ($user = $this->modx->getObject('modUser', $q)) {
 			list($hash, $password) = explode(':', urldecode(@$data['hash']));
 			$activate = $user->activatePassword($hash);
 			if ($activate === true) {
-				if (!$user->active) {
+				if (!$user->get('active')) {
 					$user->set('active', true);
 					$user->save();
 				}
 
 				$login_data = array(
-					'username' => $user->username
-					,'password' => $password
-					,'rememberme' => $this->config['rememberme']
-					,'login_context' => $this->config['loginContext']
+					'username' => $user->get('username'),
+					'password' => $password,
+					'rememberme' => $this->config['rememberme'],
+					'login_context' => $this->config['loginContext'],
 				);
 				if (!empty($this->config['addContexts'])) {
 					$login_data['add_contexts'] = $this->config['addContexts'];
@@ -302,13 +302,13 @@ class officeAuthController extends officeDefaultController {
 
 				$response = $this->modx->runProcessor('security/login', $login_data);
 				if ($response->isError()) {
-					$errors = $this->formatProcessorErrors($response);
+					$errors = $this->_formatProcessorErrors($response);
 					$this->modx->log(modX::LOG_LEVEL_ERROR, '[Office] unable to login user '.$data['email'].'. Message: '.$errors);
 					return $this->modx->lexicon('office_auth_err_login', array('errors' => $errors));
 				}
 			}
 		}
-		$this->sendRedirect('login');
+		$this->_sendRedirect('login');
 		return true;
 	}
 
@@ -331,16 +331,162 @@ class officeAuthController extends officeDefaultController {
 
 			$response = $this->modx->runProcessor('security/logout', $logout_data);
 			if ($response->isError()) {
-				$errors = $this->formatProcessorErrors($response);
+				$errors = $this->_formatProcessorErrors($response);
 				$this->modx->log(modX::LOG_LEVEL_ERROR, '[Office] logout error. Username: '.$this->modx->user->get('username').', uid: '.$this->modx->user->get('id').'. Message: '.$errors);
 			}
 		}
 
 		if ($redirect) {
-			$this->sendRedirect('logout');
+			$this->_sendRedirect('logout');
 		}
 	}
 
+
+	/**
+	 * Generate new password and send activation link for existing user
+	 *
+	 * @param $email
+	 * @param $password
+	 * @param $tpl
+	 *
+	 * @return array|string
+	 */
+	protected function _resetPassword($email, $password = '', $tpl = '') {
+		/** @var modUser $user */
+		$q = $this->modx->newQuery('modUser');
+		//$q->innerJoin('modUserProfile', 'modUserProfile', 'modUser.id = modUserProfile.internalKey');
+		$q->innerJoin('modUserProfile', 'Profile');
+		//$q->where(array('modUser.username' => $email, 'OR:modUserProfile.email:=' => $email));
+		$q->where(array('Profile.email' => $email));
+		$q->select($this->modx->getSelectColumns('modUser','modUser') . ',`Profile`.`email`');
+		if (!$user = $this->modx->getObject('modUser', $q)) {
+			return $this->error($this->modx->lexicon('office_auth_err_email_nf'));
+		}
+		/*
+		elseif ($user->sudo) {
+			return $this->error($this->modx->lexicon('office_auth_err_sudo_user'));
+		}
+		*/
+
+		$activationHash = md5(uniqid(md5($user->get('email') . '/' . $user->get('id')), true));
+
+		/** @var modDbRegister $registry */
+		$registry = $this->modx->getService('registry', 'registry.modRegistry')->getRegister('user', 'registry.modDbRegister');
+		$registry->connect();
+
+		// checking for already sent activation link
+		$registry->subscribe('/pwd/reset/' . md5($user->username));
+		$res = $registry->read(array('poll_limit' => 1, 'remove_read' => false));
+		if (!empty($res)) {
+			return $this->error($this->modx->lexicon('office_auth_err_already_sent'));
+		}
+
+		$registry->subscribe('/pwd/reset/');
+		$registry->send('/pwd/reset/', array(md5($user->username) => $activationHash), array('ttl' => $this->config['linkTTL']));
+
+		$newPassword = !empty($password)
+			? $password
+			: $user->generatePassword();
+		$user->set('cachepwd', $newPassword);
+		$user->save();
+
+		/* send activation email */
+		$id = !empty($this->config['loginResourceId'])
+			? $this->config['loginResourceId']
+			: (!empty($_REQUEST['pageId'])
+				? $_REQUEST['pageId']
+				: $this->modx->getOption('site_start')
+			);
+
+		$link = $this->modx->makeUrl($id, '', array(
+				'action' => 'auth/login'
+				,'email' => $email
+				,'hash' => $activationHash.':'.$newPassword
+			), 'full');
+
+		if (empty($tpl)) {
+			$tpl = $this->config['tplActivate'];
+		}
+		$content = $this->modx->getChunk($tpl,
+			array_merge(
+				$user->getOne('Profile')->toArray(),
+				$user->toArray(),
+				array(
+					'link' => $link,
+					'password' => $newPassword,
+				)
+			)
+		);
+		$maxIterations= (integer) $this->modx->getOption('parser_max_iterations', null, 10);
+		$this->modx->getParser()->processElementTags('', $content, false, false, '[[', ']]', array(), $maxIterations);
+		$this->modx->getParser()->processElementTags('', $content, true, true, '[[', ']]', array(), $maxIterations);
+		$send = $user->sendEmail(
+			$content
+			,array(
+				'subject' => $this->modx->lexicon('office_auth_email_subject')
+			)
+		);
+
+		if ($send !== true) {
+			$errors = $this->modx->mail->mailer->errorInfo;
+			$this->modx->log(modX::LOG_LEVEL_ERROR, '[Office] Unable to send email to '.$email.'. Message: '.$errors);
+			return $this->error($this->modx->lexicon('office_auth_err_send', array('errors' => $errors)));
+		}
+
+		return $this->success($this->modx->lexicon('office_auth_email_send'));
+	}
+
+
+	protected function _getLoginLink($scheme = 'full') {
+		if (!empty($this->config['loginResourceId'])) {
+			$id = $this->config['loginResourceId'];
+		}
+		elseif (!empty($_REQUEST['return'])) {
+			return $_REQUEST['return'];
+		}
+		elseif (!empty($_SERVER['HTTP_REFERER'])) {
+			return $_SERVER['HTTP_REFERER'];
+		}
+		else {
+			$id = $this->modx->getOption('site_start');
+		}
+
+		return $this->modx->makeUrl($id, '', '', $scheme);
+	}
+
+
+	/**
+	 * Create new user and send activation email
+	 *
+	 * @param $email
+	 * @param $username
+	 * @param $password
+	 *
+	 * @return array|string
+	 */
+	protected function _createUser($email, $username = '', $password = '') {
+		if (empty($username)) {
+			$username = $email;
+		}
+
+		$response = $this->office->runProcessor('auth/create', array(
+			'username' => $username,
+			'email' => $email,
+			'active' => false,
+			'blocked' => false,
+			'groups' => $this->config['groups'],
+		));
+
+		if ($response->isError()) {
+			$errors = $this->_formatProcessorErrors($response);
+			$this->modx->log(modX::LOG_LEVEL_ERROR, '[Office] Unable to create user '.$email.'. Message: '.$errors);
+
+			return $this->error($this->modx->lexicon('office_auth_err_create', array('errors' => $errors)));
+		}
+		else {
+			return $this->_resetPassword($email, $password, $this->config['tplRegister']);
+		}
+	}
 
 
 	/**
@@ -349,7 +495,7 @@ class officeAuthController extends officeDefaultController {
 	 * @param string $action The action to do
 	 * @return void
 	 */
-	function sendRedirect($action = '') {
+	protected function _sendRedirect($action = '') {
 		$error_pages = array($this->modx->getOption('error_page'), $this->modx->getOption('unauthorized_page'));
 
 		if ($action == 'login' && $this->config['loginResourceId']) {
@@ -397,7 +543,7 @@ class officeAuthController extends officeDefaultController {
 	 *
 	 * @return string
 	 */
-	public function formatProcessorErrors(modProcessorResponse $response, $glue = 'br') {
+	protected function _formatProcessorErrors(modProcessorResponse $response, $glue = 'br') {
 		$errormsgs = array();
 
 		if ($response->hasMessage()) {

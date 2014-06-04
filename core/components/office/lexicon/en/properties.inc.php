@@ -15,6 +15,7 @@ $_lang['office_prop_logoutResourceId'] = 'Resource id to redirect to on successf
 $_lang['office_prop_tplLogin'] = 'This chunk will see any anonymous user.';
 $_lang['office_prop_tplLogout'] = 'This chunk will see any authenticated user.';
 $_lang['office_prop_tplActivate'] = 'Chunk for activation email.';
+$_lang['office_prop_tplRegister'] = 'Chunk for registration email.';
 $_lang['office_prop_tplProfile'] = 'Chunk for display and edit user profile.';
 $_lang['office_prop_providerTpl'] = 'Chunk to display a link for HybridAuth authorization or linking a service to your account.';
 $_lang['office_prop_activeProviderTpl'] = 'Chunk for output icon of linked HybridAuth service.';

@@ -15,6 +15,10 @@ $tmp = array(
 		'type' => 'textfield',
 		'value' => 'tpl.Office.auth.activate',
 	),
+	'tplRegister' => array(
+		'type' => 'textfield',
+		'value' => 'tpl.Office.auth.register',
+	),
 
 	'linkTTL' => array(
 		'type' => 'textfield',

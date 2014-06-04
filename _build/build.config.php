@@ -3,8 +3,8 @@
 define('PKG_NAME', 'Office');
 define('PKG_NAME_LOWER', strtolower(PKG_NAME));
 
-define('PKG_VERSION', '1.0.1');
-define('PKG_RELEASE', 'pl');
+define('PKG_VERSION', '1.1.0');
+define('PKG_RELEASE', 'beta');
 define('PKG_AUTO_INSTALL', true);
 
 /* define paths */
@@ -47,7 +47,7 @@ define('BUILD_SNIPPET_STATIC', false);
 define('BUILD_PLUGIN_STATIC', false);
 
 $BUILD_RESOLVERS = array(
-	'settings',
 	'chunks',
 	'setup',
+	'settings',
 );

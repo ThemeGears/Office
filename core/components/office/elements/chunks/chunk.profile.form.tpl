@@ -45,6 +45,18 @@
 	</div>
 
 	<div class="form-group">
+		<label class="col-sm-2 control-label">[[%office_profile_password]]</label>
+		<div class="col-sm-10">
+			<input type="password" name="specifiedpassword" value="" placeholder="********" class="form-control" />
+			<p class="help-block message">[[+error_specifiedpassword]]</p>
+			<p class="help-block desc">[[%office_profile_specifiedpassword_desc]]</p>
+			<input type="password" name="confirmpassword" value="" placeholder="********" class="form-control" />
+			<p class="help-block message">[[+error_confirmpassword]]</p>
+			<p class="help-block desc">[[%office_profile_confirmpassword_desc]]</p>
+		</div>
+	</div>
+
+	<div class="form-group">
 		<label class="col-sm-2 control-label">[[%ha.providers_available]]</label>
 		<div class="col-sm-10">
 			[[+providers]]

@@ -12,7 +12,7 @@ class officeProfileController extends officeDefaultController {
 				'tplProfile' => 'tpl.Office.profile.form',
 				'tplActivate' => 'tpl.Office.profile.activate',
 
-				'profileFields' => 'username:50,email:50,fullname:50,phone:12,mobilephone:12,dob:10,gender,address,country,city,state,zip,fax,photo,comment,website',
+				'profileFields' => 'username:50,email:50,fullname:50,phone:12,mobilephone:12,dob:10,gender,address,country,city,state,zip,fax,photo,comment,website,specifiedpassword,confirmpassword',
 				'requiredFields' => 'username,email,fullname',
 
 				'HybridAuth' => true,
@@ -205,7 +205,10 @@ class officeProfileController extends officeDefaultController {
 				: $this->modx->lexicon('office_profile_msg_save_noemail', array('errors' => $change));
 		}
 		else {
-			$message = $this->modx->lexicon('office_profile_msg_save');
+			$object = $response->getObject();
+			$message = !empty($object['specifiedpassword'])
+				? $this->modx->lexicon('office_profile_msg_save_password', array('password' => $object['specifiedpassword']))
+				: $this->modx->lexicon('office_profile_msg_save');
 		}
 
 		$saved = array();

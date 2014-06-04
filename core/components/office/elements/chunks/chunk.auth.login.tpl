@@ -1,17 +1,59 @@
-<div id="office-auth-form">
-	<h4>[[%office_auth_form_header]]</h4>
-	<form class="form-inline">
-		<div class="form-group">
-			<input type="text" name="email" placeholder="[[%office_auth_email]]" class="form-control" id="office-auth-form-email" />
-			<button type="submit" class="btn btn-primary">[[%office_auth_send]]</button>
-		</div>
-		<p class="help-block">[[%office_auth_form_footer]]</p>
-	</form>
+<div class="row" id="office-auth-form">
+	<div class="col-md-6 office-auth-login-wrapper">
+		<h4>[[%office_auth_login]]</h4>
 
-	<small>[[%ha.providers_available]]:</small><br/>
-	[[+providers]]
+		<form method="post" class="form-horizontal" id="office-auth-login">
+			<div class="form-group">
+				<label for="office-auth-login-email" class="col-md-3 control-label">[[%office_auth_login_email]]</label>
+				<div class="col-md-8">
+					<input type="email" name="email" placeholder="" class="form-control" id="office-auth-login-email" value="" />
+					<p class="help-block"><small>[[%office_auth_login_email_desc]]</small></p>
+				</div>
 
-	[[+error:notempty=`
+				<label for="office-auth-login-password" class="col-md-3 control-label">[[%office_auth_login_password]]</label>
+				<div class="col-md-8">
+					<input type="password" name="password" placeholder="" class="form-control" id="office-login-form-password" value="" />
+					<p class="help-block"><small>[[%office_auth_login_password_desc]]</small></p>
+				</div>
+
+				<input type="hidden" name="action" value="auth/formLogin" />
+				<input type="hidden" name="return" value="" />
+				<div class="col-sm-offset-3 col-sm-8">
+					<button type="submit" class="btn btn-primary">[[%office_auth_login_btn]]</button>
+				</div>
+			</div>
+		</form>
+
+		<label>[[%office_auth_login_ha]]</label>
+		<div>[[+providers]]</div>
+		<p class="help-block"><small>[[%office_auth_login_ha_desc]]</small></p>
+
+		[[+error:notempty=`
 		<div class="alert alert-block alert-danger alert-error">[[+error]]</div>
-	`]]
+		`]]
+	</div>
+
+	<div class="col-md-6 office-auth-register-wrapper">
+		<h4>[[%office_auth_register]]</h4>
+		<form method="post" class="form-horizontal" id="office-auth-register">
+			<div class="form-group">
+				<label for="office-auth-register-email" class="col-md-3 control-label">[[%office_auth_register_email]]</label>
+				<div class="col-md-8">
+					<input type="email" name="email" placeholder="" class="form-control" id="office-auth-register-email" value="" />
+					<p class="help-block"><small>[[%office_auth_register_email_desc]]</small></p>
+				</div>
+
+				<label for="office-auth-register-password" class="col-md-3 control-label">[[%office_auth_register_password]]</label>
+				<div class="col-md-8">
+					<input type="password" name="password" placeholder="" class="form-control" id="office-register-form-password" value="" />
+					<p class="help-block"><small>[[%office_auth_register_password_desc]]</small></p>
+				</div>
+
+				<input type="hidden" name="action" value="auth/formRegister" />
+				<div class="col-sm-offset-3 col-sm-8">
+					<button type="submit" class="btn btn-danger">[[%office_auth_register_btn]]</button>
+				</div>
+			</div>
+		</form>
+	</div>
 </div>

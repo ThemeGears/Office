@@ -14,15 +14,18 @@ $_lang['office_profile_fullname'] = 'Full name';
 $_lang['office_profile_fullname_desc'] = 'Your full name, for example John Smith.';
 $_lang['office_profile_email'] = 'Email';
 $_lang['office_profile_email_desc'] = 'New email will need to confirm.';
+$_lang['office_profile_password'] = 'Password';
+$_lang['office_profile_specifiedpassword_desc'] = 'You can change your password.';
+$_lang['office_profile_confirmpassword_desc'] = 'Please, enter your new password again.';
 $_lang['office_profile_save'] = 'Save';
 $_lang['office_profile_reset'] = 'Reset';
 $_lang['office_profile_logout'] = 'Logout &rarr;';
 
-$_lang['office_auth_email_subject'] = 'Email verification';
+$_lang['office_profile_email_subject'] = 'Email verification';
 
-$_lang['office_profile_err_auth'] = 'Not logged in!';
 $_lang['office_profile_err_update'] = 'Error during update profile';
 $_lang['office_profile_msg_save'] = 'Changes was successfully saved';
+$_lang['office_profile_msg_save_password'] = 'Changes was successfully saved, your new password is <strong>[[+password]]</strong>';
 $_lang['office_profile_msg_save_email'] = 'Changes was successfully saved. Your email address will not change until you confirm it.';
 $_lang['office_profile_msg_save_noemail'] = 'Changes was successfully saved, but we could not send activation link to new email: [[+errors]].';
 

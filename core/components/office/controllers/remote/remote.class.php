@@ -117,7 +117,7 @@ class officeRemoteAuthController extends officeAuthController {
 							/** @var modProcessorResponse $response */
 							$response = $this->office->runProcessor('auth/update', $data);
 							if ($response->isError()) {
-								$errors = $this->formatProcessorErrors($response);
+								$errors = $this->_formatProcessorErrors($response);
 								$this->modx->log(modX::LOG_LEVEL_ERROR, '[Office] Unable to update user "'.@$data['username'].'". Message: '.$errors);
 								$_SESSION['Office']['Auth']['error'] = $this->modx->lexicon('office_auth_err_update', array('errors' => $errors));
 							}
@@ -134,7 +134,7 @@ class officeRemoteAuthController extends officeAuthController {
 						/** @var modProcessorResponse $response */
 						$response = $this->office->runProcessor('auth/create', $data);
 						if ($response->isError()) {
-							$errors = $this->formatProcessorErrors($response);
+							$errors = $this->_formatProcessorErrors($response);
 							$this->modx->log(modX::LOG_LEVEL_ERROR, '[Office] Unable to create user "'.@$data['username'].'". Message: '.$errors);
 							$_SESSION['Office']['Auth']['error'] = $this->modx->lexicon('office_auth_err_create', array('errors' => $errors));
 						}
@@ -160,7 +160,7 @@ class officeRemoteAuthController extends officeAuthController {
 
 						$response = $this->modx->runProcessor('security/login', $login_data);
 						if ($response->isError()) {
-							$_SESSION['Office']['Auth']['error'] = $this->modx->lexicon('office_auth_err_login', array('errors' => $this->formatProcessorErrors($response)));
+							$_SESSION['Office']['Auth']['error'] = $this->modx->lexicon('office_auth_err_login', array('errors' => $this->_formatProcessorErrors($response)));
 						}
 					}
 				}
@@ -171,7 +171,7 @@ class officeRemoteAuthController extends officeAuthController {
 			curl_close($ch);
 		}
 
-		$this->sendRedirect('login');
+		$this->_sendRedirect('login');
 	}
 
 
@@ -210,7 +210,7 @@ class officeRemoteAuthController extends officeAuthController {
 		}
 
 		if ($redirect) {
-			parent::sendRedirect('logout');
+			parent::_sendRedirect('logout');
 		}
 	}
 

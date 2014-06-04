@@ -14,7 +14,7 @@ $tmp = array(
 
 	'profileFields' => array(
 		'type' => 'textfield',
-		'value' => 'username:50,email:50,fullname:50,phone:12,mobilephone:12,dob:10,gender,address,country,city,state,zip,fax,photo,comment,website',
+		'value' => 'username:50,email:50,fullname:50,phone:12,mobilephone:12,dob:10,gender,address,country,city,state,zip,fax,photo,comment,website,specifiedpassword,confirmpassword',
 	),
 	'requiredFields' => array(
 		'type' => 'textfield',

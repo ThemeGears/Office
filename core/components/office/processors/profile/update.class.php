@@ -58,6 +58,12 @@ class officeProfileUserUpdateProcessor extends modUserUpdateProcessor {
 		if (!$this->getProperty('username')) {
 			$this->setProperty('username', $this->object->get('username'));
 		}
+		// Handle new password
+		if ($this->getProperty('specifiedpassword') || $this->getProperty('confirmpassword')) {
+			$this->setProperty('passwordnotifymethod', 's');
+			$this->setProperty('passwordgenmethod', 'spec');
+			$this->setProperty('newpassword', '');
+		}
 		// Allow only uploaded images
 		if ($photo = $this->getProperty('photo')) {
 			if (strpos($photo, '://') !== false) {
@@ -78,6 +84,7 @@ class officeProfileUserUpdateProcessor extends modUserUpdateProcessor {
 		if ($before) {
 			$this->handlePhoto();
 		}
+
 		return $before;
 	}
 
