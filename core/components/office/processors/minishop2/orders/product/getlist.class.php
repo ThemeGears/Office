@@ -36,10 +36,6 @@ class msProductGetListProcessor extends modObjectGetListProcessor {
 		$fields = array_values(array_unique(array_merge($fields, array('product_id','name','url'))));
 
 		$data = array();
-		$data['name'] = !$object->get('name')
-			? $object->get('product_pagetitle')
-			: $object->get('name');
-
 		foreach ($fields as $v) {
 			$data[$v] = $object->get($v);
 			if ($v == 'product_price' || $v == 'product_old_price' || $v == 'price' || $v == 'cost') {
@@ -48,6 +44,9 @@ class msProductGetListProcessor extends modObjectGetListProcessor {
 			elseif ($v == 'product_weight') {
 				$data[$v] = $this->ms2->formatWeight($data[$v]);
 			}
+		}
+		if (empty($data['name'])) {
+			$data['name'] = $object->get('product_pagetitle');
 		}
 
 		$options = $object->get('options');

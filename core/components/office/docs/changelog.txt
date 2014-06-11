@@ -1,5 +1,9 @@
 Changelog for Office.
 
+1.1.0-rc
+==============
+- [miniShop2] Fixed empty product names in order grid on MS2 < 2.1.8.
+
 1.1.0-beta
 ==============
 - [Main] Updated Ext JS modx-theme.
