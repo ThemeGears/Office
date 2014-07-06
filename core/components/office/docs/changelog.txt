@@ -6,6 +6,7 @@ Changelog for Office.
 - [Auth] Added "username" and "fullname" fields to registration form.
 - [Auth] Ability to use username or email for login.
 - [Auth] User will receive activation email if he trying to login and his account was not activated.
+- [#1] [Profile] Improved regular expression for supporting of all unicode characters.
 
 1.1.0-beta
 ==============

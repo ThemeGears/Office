@@ -233,7 +233,8 @@ class officeProfileController extends officeDefaultController {
 	 * @return string The sanitized string.
 	 */
 	public function Sanitize($string = '', $length = 0) {
-		$expr = '/[^-_a-zа-яё0-9@\s\.\,\:\/\\\]+/iu';
+		$expr = $this->modx->getOption('office_sanitize_pcre', null, '/[^-_a-z\p{L}0-9@\s\.\,\:\/\\\]+/iu', true);
+		$string = html_entity_decode($string, ENT_QUOTES, 'UTF-8');
 		$sanitized = trim(preg_replace($expr, '', $string));
 
 		return !empty($length)
