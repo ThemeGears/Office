@@ -67,7 +67,7 @@ ul.office-row-actions .btn {padding: 5px; margin-right:5px; min-width:26px;}
 
 .office-auth-login-wrapper, .office-auth-register-wrapper {
 	min-height: 20px;
-	padding: 19px;
+	padding: 20px;
 	margin-bottom: 20px;
 }
 .office-auth-register-wrapper {
@@ -76,6 +76,10 @@ ul.office-row-actions .btn {padding: 5px; margin-right:5px; min-width:26px;}
 	border-radius: 4px;
 	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
 	box-shadow: inset 0 1px 1px rgba(0,0,0,0.05);
+}
+
+#office-auth-form .red {
+	color: darkred;
 }
 
 .x-form-label-left .x-form-item-label,

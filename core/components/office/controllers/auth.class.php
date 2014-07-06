@@ -142,13 +142,25 @@ class officeAuthController extends officeDefaultController {
 				array('refresh' => $this->_getLoginLink())
 			);
 		}
-		// Check email
+		// Check email and username
+		$username = strtolower(trim(@$data['username']));
 		$email = strtolower(trim(@$data['email']));
-		if (empty($email)) {
-			return $this->error($this->modx->lexicon('office_auth_err_email_ns'));
+		if (!empty($username)) {
+			if ($user = $this->modx->getObject('modUser', array('username' => $username))) {
+				$profile = $user->getOne('Profile');
+			}
+			else {
+				$profile = $this->modx->getObject('modUserProfile', array('email' => $username));
+			}
+		}
+		elseif (!empty($email)) {
+			$profile = $this->modx->getObject('modUserProfile', array('email' => $email));
+		}
+		else {
+			return $this->error($this->modx->lexicon('office_auth_err_email_username_ns'));
 		}
 		/** @var modUserProfile $profile */
-		if ($profile = $this->modx->getObject('modUserProfile', array('email' => $email))) {
+		if (!empty($profile) && $profile instanceof modUserProfile) {
 			/** @var modUser $user */
 			$user = $profile->getOne('User');
 			if (!$user->get('active')) {
@@ -158,7 +170,7 @@ class officeAuthController extends officeDefaultController {
 			$password = trim(@$data['password']);
 			// If user did not send password - he wants to reset it
 			if (empty($password)) {
-				return $this->_resetPassword($email);
+				return $this->_resetPassword($email, $username);
 			}
 
 			// Otherwise we try to login
@@ -187,7 +199,7 @@ class officeAuthController extends officeDefaultController {
 			}
 		}
 		else {
-			return $this->error($this->modx->lexicon('office_auth_err_email_nf'));
+			return $this->error($this->modx->lexicon('office_auth_err_email_username_nf'));
 		}
 	}
 
@@ -207,18 +219,23 @@ class officeAuthController extends officeDefaultController {
 				array('refresh' => $this->_getLoginLink())
 			);
 		}
-		// Check username
-		$username = trim(@$data['username']);
-		if (!empty($username) && !preg_match('/^[^\'\\x3c\\x3e\\(\\);\\x22]+$/', $username)) {
-			return $this->error($this->modx->lexicon('office_auth_err_username_invalid'));
-		}
 		// Check email
 		$email = strtolower(trim(@$data['email']));
 		if (empty($email)) {
 			return $this->error($this->modx->lexicon('office_auth_err_email_ns'));
 		}
-		elseif ($this->modx->getCount('modUserProfile', array('email' => $email))) {
-			return $this->error($this->modx->lexicon('office_auth_err_user_exists'));
+		elseif ($this->modx->getCount('modUserProfile', array('email' => $email)) || $this->modx->getCount('modUser', array('username' => $email))) {
+			return $this->error($this->modx->lexicon('office_auth_err_email_exists'));
+		}
+		// Check username
+		$username = strtolower(trim(@$data['username']));
+		if (!empty($username)) {
+			if (!preg_match('/^[^\'\\x3c\\x3e\\(\\);\\x22]+$/', $username)) {
+				return $this->error($this->modx->lexicon('office_auth_err_username_invalid'));
+			}
+			elseif ($this->modx->getCount('modUser', array('username' => $username))) {
+				return $this->error($this->modx->lexicon('office_auth_err_username_exists'));
+			}
 		}
 		// Check password
 		$password = trim(@$data['password']);
@@ -231,8 +248,10 @@ class officeAuthController extends officeDefaultController {
 				return $this->error($this->modx->lexicon('office_auth_err_password_invalid'));
 			}
 		}
+		// Handle fullname
+		$fullname = $this->modx->stripTags(trim(@$data['fullname']));
 
-		return $this->_createUser($email, $username, $password);
+		return $this->_createUser($email, $username, $password, $fullname);
 	}
 
 
@@ -346,29 +365,36 @@ class officeAuthController extends officeDefaultController {
 	 * Generate new password and send activation link for existing user
 	 *
 	 * @param $email
+	 * @param $username
 	 * @param $password
 	 * @param $tpl
 	 *
 	 * @return array|string
 	 */
-	protected function _resetPassword($email, $password = '', $tpl = '') {
+	protected function _resetPassword($email = '', $username = '', $password = '', $tpl = '') {
 		/** @var modUser $user */
 		$q = $this->modx->newQuery('modUser');
-		//$q->innerJoin('modUserProfile', 'modUserProfile', 'modUser.id = modUserProfile.internalKey');
 		$q->innerJoin('modUserProfile', 'Profile');
-		//$q->where(array('modUser.username' => $email, 'OR:modUserProfile.email:=' => $email));
-		$q->where(array('Profile.email' => $email));
+		if (!empty($email)) {
+			$q->where(array('modUserProfile.email' => $email));
+		}
+		elseif (!empty($username)) {
+			$q->where(array('modUser.username' => $username));
+		}
+		else {
+			return $this->error($this->modx->lexicon('office_auth_err_email_username_ns'));
+		}
 		$q->select($this->modx->getSelectColumns('modUser','modUser') . ',`Profile`.`email`');
 		if (!$user = $this->modx->getObject('modUser', $q)) {
-			return $this->error($this->modx->lexicon('office_auth_err_email_nf'));
+			return $this->error($this->modx->lexicon('office_auth_err_email_username_nf'));
 		}
 		/*
 		elseif ($user->sudo) {
 			return $this->error($this->modx->lexicon('office_auth_err_sudo_user'));
 		}
 		*/
-
-		$activationHash = md5(uniqid(md5($user->get('email') . '/' . $user->get('id')), true));
+		$email = $user->get('email');
+		$activationHash = md5(uniqid(md5($email . '/' . $user->get('id')), true));
 
 		/** @var modDbRegister $registry */
 		$registry = $this->modx->getService('registry', 'registry.modRegistry')->getRegister('user', 'registry.modDbRegister');
@@ -461,16 +487,24 @@ class officeAuthController extends officeDefaultController {
 	 * @param $email
 	 * @param $username
 	 * @param $password
+	 * @param $fullname
 	 *
 	 * @return array|string
 	 */
-	protected function _createUser($email, $username = '', $password = '') {
+	protected function _createUser($email, $username = '', $password = '', $fullname = '') {
 		if (empty($username)) {
 			$username = $email;
+		}
+		if (empty($fullname)) {
+			$fullname = substr($email, 0, strpos($email, '@'));
+		}
+		else {
+			$fullname = mb_substr($fullname, 0, 50, 'UTF-8');
 		}
 
 		$response = $this->office->runProcessor('auth/create', array(
 			'username' => $username,
+			'fullname' => $fullname,
 			'email' => $email,
 			'active' => false,
 			'blocked' => false,
@@ -484,7 +518,7 @@ class officeAuthController extends officeDefaultController {
 			return $this->error($this->modx->lexicon('office_auth_err_create', array('errors' => $errors)));
 		}
 		else {
-			return $this->_resetPassword($email, $password, $this->config['tplRegister']);
+			return $this->_resetPassword($email, '', $password, $this->config['tplRegister']);
 		}
 	}
 

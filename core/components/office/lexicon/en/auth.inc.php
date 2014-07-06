@@ -11,6 +11,8 @@ $_lang['office_auth_welcome'] = 'You are logged in as ';
 $_lang['office_auth_login'] = 'Log in';
 $_lang['office_auth_login_email'] = 'Email';
 $_lang['office_auth_login_email_desc'] = 'Enter the email address you used when registering.';
+$_lang['office_auth_login_username'] = 'Login';
+$_lang['office_auth_login_username_desc'] = 'Enter the email or login, that you used for registration.';
 $_lang['office_auth_login_password'] = 'Password';
 $_lang['office_auth_login_password_desc'] = 'If you do not remember your password, simply leave this field blank and you will receive a new, along with a link to activate.';
 $_lang['office_auth_login_ha'] = 'Social networks';
@@ -18,18 +20,25 @@ $_lang['office_auth_login_ha_desc'] = 'You can use the quick login through the s
 $_lang['office_auth_login_btn'] = 'Log in';
 
 $_lang['office_auth_register'] = 'Registration';
+$_lang['office_auth_register_username'] = 'Login';
+$_lang['office_auth_register_username_desc'] = 'You can specify a separate login instead of using email for enter.';
 $_lang['office_auth_register_email'] = 'Email';
-$_lang['office_auth_register_email_desc'] = 'On the specified will receive an email with an activation link.';
+$_lang['office_auth_register_email_desc'] = 'You will will receive an activation link on the specified email.';
 $_lang['office_auth_register_password'] = 'Password';
-$_lang['office_auth_register_password_desc'] = 'You can specify your own password, or leave this field blank, and then it will be generated automatically.';
+$_lang['office_auth_register_password_desc'] = 'You can specify your own password, or leave this field blank, and it will be generated automatically.';
+$_lang['office_auth_register_fullname'] = 'Name';
+$_lang['office_auth_register_fullname_desc'] = 'Your full name for displaying on site.';
 $_lang['office_auth_register_btn'] = 'Registration';
 
 $_lang['office_auth_email_subject'] = 'The authorization link';
 
 $_lang['office_auth_err_email_ns'] = 'You must specify your email';
+$_lang['office_auth_err_email_username_ns'] = 'You must specify your login or email';
 $_lang['office_auth_err_email_nf'] = 'A user with the specified email is not found';
+$_lang['office_auth_err_email_username_nf'] = 'A user is not found';
 $_lang['office_auth_err_user_active'] = 'You have not activated your account';
-$_lang['office_auth_err_user_exists'] = 'A user with this email already exists';
+$_lang['office_auth_err_email_exists'] = 'A user with this email is already exists';
+$_lang['office_auth_err_username_exists'] = 'A user with this login is already exists';
 $_lang['office_auth_err_password_short'] = 'The password is too short. The minimum length of the password: [[+req]] characters.';
 $_lang['office_auth_err_password_invalid'] = 'The password contains invalid characters';
 $_lang['office_auth_err_username_invalid'] = 'The username contains invalid characters';
