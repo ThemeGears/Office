@@ -14,9 +14,7 @@ Office.Profile = {
 
 		$(document).on('click', '#office-user-photo-remove', function(e) {
 			e.preventDefault();
-			var $newphoto = elem.find('input[name="newphoto"]');
-			$newphoto.replaceWith($newphoto.clone());
-			elem.find('input[name="photo"]').attr('value', '');
+			Office.Profile.clearPhoto(elem);
 			elem.submit();
 			return false;
 		});
@@ -37,6 +35,7 @@ Office.Profile = {
 					var i;
 					if (response.success) {
 						Office.Message.success(response.message);
+						Office.Profile.clearPhoto(elem);
 						if (response.data) {
 							for (i in response.data) {
 								if (response.data.hasOwnProperty(i)) {
@@ -75,6 +74,12 @@ Office.Profile = {
 		});
 
 		return true;
+	}
+
+	,clearPhoto: function(elem) {
+		var $newphoto = elem.find('input[name="newphoto"]');
+		$newphoto.val('').replaceWith($newphoto.clone(true));
+		elem.find('input[name="photo"]').attr('value', '');
 	}
 
 };
