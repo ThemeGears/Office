@@ -163,13 +163,24 @@ class officeAuthController extends officeDefaultController {
 		if (!empty($profile) && $profile instanceof modUserProfile) {
 			/** @var modUser $user */
 			$user = $profile->getOne('User');
-			if (!$user->get('active')) {
-				return $this->error($this->modx->lexicon('office_auth_err_user_active'));
-			}
-
 			$password = trim(@$data['password']);
+
+			// If user did not activate his account - try to send link agaim
+			if (!$user->get('active')) {
+				$reset = $this->_resetPassword($email, $username);
+				if (!empty($this->config['json_response'])) {
+					$reset = $this->modx->fromJSON($reset);
+				}
+				if ($reset['success']) {
+					$reset['message'] = $this->modx->lexicon('office_auth_err_user_active');
+					return $this->success($reset['message']);
+				}
+				else {
+					return $this->error($reset['message'], $reset['data']);
+				}
+			}
 			// If user did not send password - he wants to reset it
-			if (empty($password)) {
+			elseif (empty($password)) {
 				return $this->_resetPassword($email, $username);
 			}
 
