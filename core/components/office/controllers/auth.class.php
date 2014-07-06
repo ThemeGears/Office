@@ -102,6 +102,13 @@ class officeAuthController extends officeDefaultController {
 		}
 
 		if (!$this->modx->user->isAuthenticated($this->modx->context->key)) {
+			// Redirect after authorization
+			if (!empty($_GET['hauth_return']) && !$this->modx->user->isAuthenticated($this->modx->context->key)) {
+				$url = parse_url($_GET['hauth_return']);
+				if (!empty($url['path'])) {
+					$_SESSION['Office']['ReturnTo'][$this->modx->context->key] = $url['path'];
+				}
+			}
 			// Login errors
 			if (!empty($_SESSION['Office']['Auth']['error'])) {
 				$pls['error'] = $_SESSION['Office']['Auth']['error'];

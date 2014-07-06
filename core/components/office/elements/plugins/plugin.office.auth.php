@@ -25,6 +25,13 @@ switch ($modx->event->name) {
 				$modx->getUser($modx->context->key);
 			}
 		}
+
+		if (!empty($_SESSION['Office']['ReturnTo'][$modx->context->key]) && $modx->user->isAuthenticated($modx->context->key)) {
+			$return = $_SESSION['Office']['ReturnTo'][$modx->context->key];
+			unset($_SESSION['Office']['ReturnTo'][$modx->context->key]);
+			$modx->sendRedirect($return);
+		}
+
 		break;
 
 	case 'OnWebAuthentication':
