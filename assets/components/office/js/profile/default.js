@@ -6,10 +6,10 @@ Office.Profile = {
 
 		// Disable elements during ajax request
 		$(document).ajaxStart(function() {
-			elem.find('button, a').attr('disabled', true);
+			elem.find('button, a, input, select, textarea').attr('disabled', true).addClass('tmp-disabled');
 		})
 		.ajaxStop(function() {
-			elem.find('button, a').attr('disabled', false);
+			elem.find('.tmp-disabled').attr('disabled', false);
 		});
 
 		$(document).on('click', '#office-user-photo-remove', function(e) {
