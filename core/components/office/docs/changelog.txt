@@ -1,6 +1,6 @@
 Changelog for Office.
 
-1.1.0-pl
+1.1.0-pl1
 ==============
 - [miniShop2] Fixed empty product names in order grid on MS2 < 2.1.8.
 - [Auth] Added "username" and "fullname" fields to registration form.

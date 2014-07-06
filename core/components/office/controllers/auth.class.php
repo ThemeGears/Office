@@ -394,10 +394,10 @@ class officeAuthController extends officeDefaultController {
 		$q = $this->modx->newQuery('modUser');
 		$q->innerJoin('modUserProfile', 'Profile');
 		if (!empty($email)) {
-			$q->where(array('modUserProfile.email' => $email));
+			$q->where(array('modUser.username' => $email, 'OR:Profile.email:=' => $email));
 		}
 		elseif (!empty($username)) {
-			$q->where(array('modUser.username' => $username));
+			$q->where(array('modUser.username' => $username, 'OR:Profile.email:=' => $username));
 		}
 		else {
 			return $this->error($this->modx->lexicon('office_auth_err_email_username_ns'));
