@@ -85,3 +85,5 @@ ul.office-row-actions .btn {padding: 5px; margin-right:5px; min-width:26px;}
 .x-form-label-left .x-form-item-label,
 .x-form-label-right .x-form-item-label {line-height: 32px;}
 .x-menu-list .fa {min-width: 1em; text-align:center;}
+
+.x-tab-strip li {list-style: none;}
