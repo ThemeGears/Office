@@ -26,6 +26,8 @@ class officeRemoteAuthController extends officeAuthController {
 			'authId' => '',
 			'remote' => '',
 			'HybridAuth' => false,
+
+			'gravatarUrl' => 'https://gravatar.com/avatar/'
 		), $config);
 
 		$_SESSION['Office']['Remote'][$this->modx->context->key] = $this->config;
@@ -44,7 +46,7 @@ class officeRemoteAuthController extends officeAuthController {
 			$user = $this->modx->user->toArray();
 			$profile = $this->modx->user->Profile->toArray();
 			$pls = array_merge($profile, $user);
-			$pls['gravatar'] = 'https://gravatar.com/avatar/'.md5(strtolower($profile['email']));
+			$pls['gravatar'] = $this->config['gravatarUrl'] . md5(strtolower($profile['email']));
 
 			$output = $this->modx->getChunk($this->config['tplLogout'], $pls);
 		}

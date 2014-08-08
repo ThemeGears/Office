@@ -23,6 +23,8 @@ class officeProfileController extends officeDefaultController {
 
 				'avatarPath' => 'images/users/',
 				'avatarParams' => '{"w":200,"h":200,"zc":0,"bg":"ffffff","f":"jpg"}',
+
+				'gravatarUrl' => 'https://gravatar.com/avatar/'
 			), $config);
 		}
 
@@ -112,7 +114,7 @@ class officeProfileController extends officeDefaultController {
 				$pls['error_'.$v] = $this->modx->lexicon('office_profile_err_field_'.$v);
 			}
 		}
-		$pls['gravatar'] = 'http://gravatar.com/avatar/'.md5(strtolower($profile['email']));
+		$pls['gravatar'] = $this->config['gravatarUrl'] . md5(strtolower($profile['email']));
 
 		return $this->modx->getChunk($this->config['tplProfile'], $pls);
 	}

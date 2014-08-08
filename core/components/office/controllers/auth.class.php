@@ -34,6 +34,8 @@ class officeAuthController extends officeDefaultController {
 				'HybridAuth' => true,
 				'providerTpl' => 'tpl.HybridAuth.provider',
 				'activeProviderTpl' => 'tpl.HybridAuth.provider.active',
+
+				'gravatarUrl' => 'https://gravatar.com/avatar/'
 			), $config);
 		}
 
@@ -127,7 +129,7 @@ class officeAuthController extends officeDefaultController {
 			$user = $this->modx->user->toArray();
 			$profile = $this->modx->user->Profile->toArray();
 			$pls = array_merge($pls, $profile, $user);
-			$pls['gravatar'] = 'http://gravatar.com/avatar/'.md5(strtolower($profile['email']));
+			$pls['gravatar'] = $this->config['gravatarUrl'] . md5(strtolower($profile['email']));
 
 			return $this->modx->getChunk($this->config['tplLogout'], $pls);
 		}
