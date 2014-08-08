@@ -67,6 +67,7 @@ class msOrderLogGetListProcessor extends modObjectGetListProcessor {
 
 	public function prepareArray(array $data) {
 		if (!empty($data['color'])) {
+			$data['entry'] = $this->modx->lexicon(str_replace(array('[[%', ']]'), '', $data['entry']));
 			$data['entry'] = '<span style="color:#'.$data['color'].';">'.$data['entry'].'</span>';
 			unset($data['color']);
 		}

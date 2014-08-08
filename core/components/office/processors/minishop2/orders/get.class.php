@@ -53,9 +53,15 @@ class msOrderGetProcessor extends modObjectGetProcessor {
 			$array = array_merge($array, array('fullname' => $profile->get('fullname')));
 		}
 
-		if (in_array('status', $order_fields) && $tmp = $this->object->getOne('Status')) {$array['status'] = $tmp->get('name');}
-		if (in_array('delivery', $order_fields) && $tmp = $this->object->getOne('Delivery')) {$array['delivery'] = $tmp->get('name');}
-		if (in_array('payment', $order_fields) && $tmp = $this->object->getOne('Payment')) {$array['payment'] = $tmp->get('name');}
+		if (in_array('status', $order_fields) && $tmp = $this->object->getOne('Status')) {
+			$array['status'] = $this->modx->lexicon(str_replace(array('[[%', ']]'), '', $tmp->get('name')));
+		}
+		if (in_array('delivery', $order_fields) && $tmp = $this->object->getOne('Delivery')) {
+			$array['delivery'] = $this->modx->lexicon(str_replace(array('[[%', ']]'), '', $tmp->get('name')));
+		}
+		if (in_array('payment', $order_fields) && $tmp = $this->object->getOne('Payment')) {
+			$array['payment'] = $this->modx->lexicon(str_replace(array('[[%', ']]'), '', $tmp->get('name')));
+		}
 
 		$address_fields = array_map('trim', explode(',', $this->modx->getOption('office_ms2_order_address_fields', null, '', true)));
 		$address_fields = array_intersect($address_fields, array_keys($this->modx->getFieldMeta('msOrderAddress')));

@@ -15,7 +15,7 @@ class msOrderStatusGetListProcessor extends modObjectGetListProcessor {
 	public function prepareRow(xPDOObject $object) {
 		$array = array(
 			'id' => $object->get('id')
-			,'name' => $object->get('name')
+			,'name' => $this->modx->lexicon(str_replace(array('[[%', ']]'), '', $object->get('name')))
 		);
 
 		return $array;

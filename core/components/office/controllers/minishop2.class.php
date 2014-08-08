@@ -18,7 +18,7 @@ class officeMS2Controller extends officeDefaultController {
 
 
 	public function getLanguageTopics() {
-		return array('office:minishop2');
+		return array('office:minishop2', 'minishop2:default');
 	}
 
 	public function initialize($ctx = 'web') {

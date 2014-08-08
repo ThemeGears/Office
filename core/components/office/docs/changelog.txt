@@ -3,6 +3,7 @@ Changelog for Office.
 1.1.1-pl
 ==============
 - Switched gravatar links to https by default.
+- [miniShop2] Added support of lexicons in payment, delivery and status names.
 
 1.1.0-pl1
 ==============

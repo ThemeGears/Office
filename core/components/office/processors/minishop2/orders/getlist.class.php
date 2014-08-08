@@ -111,7 +111,16 @@ class msOrderGetListProcessor extends modObjectGetListProcessor {
 		if (isset($data['cart_cost'])) {$data['cart_cost'] = $this->ms2->formatPrice($data['cart_cost']);}
 		if (isset($data['delivery_cost'])) {$data['delivery_cost'] = $this->ms2->formatPrice($data['delivery_cost']);}
 		if (isset($data['weight'])) {$data['weight'] = $this->ms2->formatWeight($data['weight']);}
-		if (isset($data['status'])) {$data['status'] = '<span style="color:#'.$data['color'].';">'.$data['status'].'</span>';}
+		if (isset($data['status'])) {
+			$data['status'] = $this->modx->lexicon(str_replace(array('[[%',']]'), '', $data['status']));
+			$data['status'] = '<span style="color:#'.$data['color'].';">'.$data['status'].'</span>';
+		}
+		if (isset($data['delivery'])) {
+			$data['delivery'] = $this->modx->lexicon(str_replace(array('[[%',']]'), '', $data['delivery']));
+		}
+		if (isset($data['payment'])) {
+			$data['payment'] = $this->modx->lexicon(str_replace(array('[[%',']]'), '', $data['payment']));
+		}
 		unset($data['color']);
 
 		return $data;
