@@ -28,6 +28,7 @@ OfficeMS2.grid.Orders = function(config) {
 		,url: OfficeMS2.config.connector_url
 		,baseParams: {
 			action: 'minishop2/getOrders'
+			,pageId: OfficeConfig.pageId
 		}
 		,fields: MODx.config.order_grid_fields
 		,autoHeight: true
@@ -167,6 +168,7 @@ Ext.extend(OfficeMS2.grid.Orders,MODx.grid.Grid,{
 			,params: {
 				action: 'minishop2/getOrder'
 				,id: id
+				,pageId: OfficeConfig.pageId
 			}
 			,listeners: {
 				success: {fn:function(r) {
@@ -391,6 +393,7 @@ OfficeMS2.grid.Logs = function(config) {
 			action: 'minishop2/getLog'
 			,order_id: config.order_id
 			,type: 'status'
+			,pageId: OfficeConfig.pageId
 		}
 		,fields: ['timestamp','action','entry']
 		,pageSize: Math.round(MODx.config.default_per_page / 6)
@@ -431,6 +434,7 @@ OfficeMS2.grid.Products = function(config) {
 		,baseParams: {
 			action: 'minishop2/getOrderProducts'
 			,order_id: config.order_id
+			,pageId: OfficeConfig.pageId
 		}
 		,fields: MODx.config.order_product_fields
 		,pageSize: Math.round(MODx.config.default_per_page / 2)

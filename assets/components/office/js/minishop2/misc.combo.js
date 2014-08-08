@@ -18,6 +18,7 @@ OfficeMS2.combo.Status = function(config) {
 			,combo: true
 			,addall: config.addall || 0
 			,order_id: config.order_id || 0
+			,pageId: OfficeConfig.pageId
 		}
 		,listeners: OfficeMS2.combo.listeners_disable
 	});
