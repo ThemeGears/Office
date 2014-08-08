@@ -44,7 +44,7 @@ class officeRemoteAuthController extends officeAuthController {
 			$user = $this->modx->user->toArray();
 			$profile = $this->modx->user->Profile->toArray();
 			$pls = array_merge($profile, $user);
-			$pls['gravatar'] = 'http://gravatar.com/avatar/'.md5(strtolower($profile['email']));
+			$pls['gravatar'] = 'https://gravatar.com/avatar/'.md5(strtolower($profile['email']));
 
 			$output = $this->modx->getChunk($this->config['tplLogout'], $pls);
 		}
@@ -91,6 +91,7 @@ class officeRemoteAuthController extends officeAuthController {
 			curl_setopt($ch, CURLOPT_URL, urldecode($remote));
 			curl_setopt($ch, CURLOPT_HEADER, 0);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 			curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 			curl_setopt($ch, CURLOPT_REFERER, $this->modx->makeUrl($this->modx->getOption('site_start'),'','','full'));
 			if (!@ini_get('safe_mode') && !@ini_get('open_basedir')) {
