@@ -393,6 +393,14 @@ class Office {
 			,MODX_MANAGER_URL.'assets/modext/widgets/core/modx.combo.js'
 			,MODX_MANAGER_URL.'assets/modext/widgets/core/modx.grid.js'
 		), 'main/widgets');
+
+		$version = $this->modx->getVersionData();
+		$modx23 = !empty($version) && version_compare($version['full_version'], '2.3.0', '>=');
+		$this->modx->regClientScript('<script type="text/javascript">
+			Ext.onReady(function() {
+				MODx.modx23 = '.(int)$modx23.';
+			});
+		</script>', true);
 	}
 
 }

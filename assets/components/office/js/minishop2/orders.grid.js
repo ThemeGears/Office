@@ -7,7 +7,7 @@ OfficeMS2.panel.Orders = function(config) {
 		,border: false
 		,items: [{
 			xtype: 'minishop2-grid-orders'
-			,cls: 'main-wrapper'
+			,cls: 'main-wrapper' + MODx.modx23 ? ' modx23' : ''
 			,border: false
 			,title: ''
 			,preventRender: true
@@ -221,7 +221,9 @@ OfficeMS2.window.ViewOrder = function(config) {
 	Ext.applyIf(config,{
 		title: _('office_ms2_menu_details')
 		,id: this.ident
+		,cls: MODx.modx23 ? 'modx23' : ''
 		,width: 750
+		,autoHeight: true
 		,labelAlign: 'top'
 		,resizable: false
 		,maximizable: false
@@ -231,8 +233,6 @@ OfficeMS2.window.ViewOrder = function(config) {
 			xtype: 'modx-tabs'
 			,activeTab: config.activeTab || 0
 			,bodyStyle: {background: 'transparent', padding: '10px', margin: 0}
-			,deferredRender: false
-			//,autoHeight: true
 			,border: true
 			,stateful: true
 			,stateId: 'minishop2-window-order-details'

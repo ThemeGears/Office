@@ -39,6 +39,7 @@ ul.x-tab-strip-top {
 	box-sizing: content-box;
 }
 
+.x-trigger-noedit {cursor: pointer !important;}
 .x-panel-btns .x-btn-mc em > button {min-width: 54px;}
 .x-panel label.desc-under {font-weight: normal; padding-top: 5px;}
 .x-panel .disabled {color: #AAA !important;}
@@ -87,3 +88,8 @@ ul.office-row-actions .btn {padding: 5px; margin-right:5px; min-width:26px;}
 .x-menu-list .fa {min-width: 1em; text-align:center;}
 
 .x-tab-strip li {list-style: none;}
+
+/* For MODX 2.3 */
+.modx23 .x-tbar-page-size {width: 30px;}
+.modx23 button.x-btn-text {font-style: normal;}
+.modx23 .x-form-trigger.x-form-arrow-trigger {right: 0;}
