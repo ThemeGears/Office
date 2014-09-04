@@ -162,12 +162,15 @@ class officeProfileController extends officeDefaultController {
 		foreach ($profileFields as $field => $length) {
 			if (isset($data[$field])) {
 				if ($field == 'comment') {
-					$fields[$field] = empty($length) ? $data[$field] : substr($data[$field], $length);
+					$fields[$field] = empty($length)
+						? trim($data[$field])
+						: trim(substr($data[$field], $length));
 				}
 				else {
 					$fields[$field] = $this->Sanitize($data[$field], $length);
 				}
 			}
+			// Extended fields
 			elseif (preg_match('/(.*?)\[(.*?)\]/', $field, $matches)) {
 				if (isset($data[$matches[1]][$matches[2]])) {
 					$fields[$matches[1]][$matches[2]] = $this->Sanitize($data[$matches[1]][$matches[2]], $length);
@@ -175,9 +178,13 @@ class officeProfileController extends officeDefaultController {
 			}
 		}
 
-		$current_email = $this->modx->user->Profile->get('email');
-		$new_email = !empty($fields['email']) ? trim($fields['email']) : '';
-		$changeEmail = !($current_email == $new_email);
+		$changeEmail = false;
+		$new_email = '';
+		if (!empty($fields['email'])) {
+			$current_email = $this->modx->user->Profile->get('email');
+			$new_email = trim($fields['email']);
+			$changeEmail = strtolower($current_email) != strtolower($new_email);
+		}
 
 		/* @var modProcessorResponse $response */
 		$response = $this->office->runProcessor('profile/update', $fields);
@@ -196,7 +203,7 @@ class officeProfileController extends officeDefaultController {
 			return $this->error($message, $errors);
 		}
 
-		if ($changeEmail) {
+		if ($changeEmail && !empty($new_email)) {
 			$page_id = !empty($data['pageId'])
 				? $data['pageId']
 				: $this->modx->getOption('office_profile_page_id');
@@ -217,7 +224,9 @@ class officeProfileController extends officeDefaultController {
 		$user = $this->modx->getObject('modUser', $this->modx->user->id);
 		$profile = $this->modx->getObject('modUserProfile', array('internalKey' => $this->modx->user->id));
 		$tmp = array_merge($profile->toArray(), $user->toArray());
-		$tmp['email'] = $new_email;
+		if (!empty($new_email)) {
+			$tmp['email'] = $new_email;
+		}
 		foreach ($fields as $k => $v) {
 			if (isset($tmp[$k]) && isset($data[$k])) {
 				$saved[$k] = $tmp[$k];

@@ -7,8 +7,8 @@ class officeProfileUserUpdateProcessor extends modUserUpdateProcessor {
 	public $permission = '';
 	public $beforeSaveEvent = 'OnBeforeUserFormSave';
 	public $afterSaveEvent = 'OnUserFormSave';
-	protected $new_email;
-	protected $current_email;
+	protected $_new_email;
+	protected $_current_email;
 
 
 	/**
@@ -26,9 +26,12 @@ class officeProfileUserUpdateProcessor extends modUserUpdateProcessor {
 	 * @return boolean
 	 */
 	public function beforeSet() {
+		$this->_current_email = $this->object->Profile->get('email');
+
 		$fields = $this->getProperty('requiredFields', '');
 		if (!empty($fields) && is_array($fields)) {
 			foreach ($fields as $field) {
+				// Extended fields
 				if (preg_match('/(.*?)\[(.*?)\]/', $field, $matches)) {
 					$tmp = $this->getProperty($matches[1],null);
 					$tmp = is_array($tmp) && isset($tmp[$matches[2]])
@@ -55,8 +58,12 @@ class officeProfileUserUpdateProcessor extends modUserUpdateProcessor {
 				}
 			}
 		}
+		// Fields required by parent processor
 		if (!$this->getProperty('username')) {
 			$this->setProperty('username', $this->object->get('username'));
+		}
+		if (!$this->_new_email = $this->getProperty('email')) {
+			$this->setProperty('email', $this->_current_email);
 		}
 		// Handle new password
 		if ($this->getProperty('specifiedpassword') || $this->getProperty('confirmpassword')) {
@@ -70,8 +77,6 @@ class officeProfileUserUpdateProcessor extends modUserUpdateProcessor {
 				$this->unsetProperty('photo');
 			}
 		}
-		$this->current_email = $this->object->Profile->get('email');
-		$this->new_email = $this->getProperty('email');
 
 		return parent::beforeSet();
 	}
@@ -161,8 +166,8 @@ class officeProfileUserUpdateProcessor extends modUserUpdateProcessor {
 
 	/** {@InheritDoc} */
 	public function afterSave() {
-		if ($this->new_email != $this->current_email) {
-			$this->object->Profile->set('email', $this->current_email);
+		if ($this->_new_email != $this->_current_email) {
+			$this->object->Profile->set('email', $this->_current_email);
 			$this->object->Profile->save();
 		}
 
