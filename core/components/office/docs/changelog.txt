@@ -4,6 +4,7 @@ Changelog for Office.
 ==============
 - [Main] Fixed work of frontend scripts whe Minify is not working.
 - [Profile] Removed option "profile_force_email_as_username" by default.
+- [#9] [Profile] Do not overwrite existing extended fields.
 - [#6] [Profile] Ability not to use email in profile form.
 
 1.1.3-pl

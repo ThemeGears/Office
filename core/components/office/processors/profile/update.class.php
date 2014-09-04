@@ -65,6 +65,11 @@ class officeProfileUserUpdateProcessor extends modUserUpdateProcessor {
 		if (!$this->_new_email = $this->getProperty('email')) {
 			$this->setProperty('email', $this->_current_email);
 		}
+		// Add existing extended fields
+		if ($extended = $this->getProperty('extended')) {
+			$extended = array_merge($this->object->Profile->get('extended'), $extended);
+			$this->setProperty('extended', $extended);
+		}
 		// Handle new password
 		if ($this->getProperty('specifiedpassword') || $this->getProperty('confirmpassword')) {
 			$this->setProperty('passwordnotifymethod', 's');
