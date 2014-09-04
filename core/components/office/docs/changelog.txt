@@ -1,5 +1,9 @@
 Changelog for Office.
 
+1.1.4-pl
+==============
+- Fixed work of frontend scripts whe Minify is not working.
+
 1.1.3-pl
 ==============
 - [#4] Fixed loading of HybridAuth with custom chunks.

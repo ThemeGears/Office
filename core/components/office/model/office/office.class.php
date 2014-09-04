@@ -261,7 +261,17 @@ class Office {
 			}
 		}
 
-		return false;
+		// Fall back to plain files if Minify fails
+		$content = array();;
+		foreach ($files as $file) {
+			if (strpos($file, MODX_BASE_PATH) === false) {
+				$file = MODX_BASE_PATH . ltrim($file, '/');
+				$content[] = file_get_contents($file);
+			}
+		}
+		$content = implode("\n", $content);
+
+		return $content;
 	}
 
 
