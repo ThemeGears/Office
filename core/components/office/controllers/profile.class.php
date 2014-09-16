@@ -132,7 +132,9 @@ class officeProfileController extends officeDefaultController {
 			return $this->error($this->modx->lexicon('office_err_auth'));
 		}
 
-		$requiredFields = array_map('trim', explode(',', $this->config['requiredFields']));
+		$requiredFields = !empty($this->config['requiredFields'])
+			? array_map('trim', explode(',', $this->config['requiredFields']))
+			: array();
 		$profileFields = array();
 
 		$fields = array(
