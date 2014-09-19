@@ -1,12 +1,13 @@
 Changelog for Office.
 
-1.1.4-pl1
+1.1.4-pl2
 ==============
 - [Main] Fixed work of frontend scripts whe Minify is not working.
 - [Profile] Removed option "profile_force_email_as_username" by default.
 - [#9] [Profile] Do not overwrite existing extended fields.
 - [#6] [Profile] Ability not to use email in profile form.
 - Ability to set empty &requiredFields=``.
+- Fixed ExtJS windows animation in MODX 2.3.
 
 1.1.3-pl
 ==============
