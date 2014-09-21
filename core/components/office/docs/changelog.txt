@@ -1,6 +1,6 @@
 Changelog for Office.
 
-1.1.4-pl2
+1.1.4-pl3
 ==============
 - [Main] Fixed work of frontend scripts whe Minify is not working.
 - [Profile] Removed option "profile_force_email_as_username" by default.

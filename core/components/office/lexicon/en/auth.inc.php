@@ -53,7 +53,7 @@ $_lang['office_auth_err_sudo_user'] = 'This user must login via manager.';
 $_lang['office_auth_err_create_disabled'] = 'Registration of new users is disabled.';
 $_lang['office_auth_err_remote_required'] = 'Enter the page of a remote server with called snippet "officeRemoteServer". For example "&remote=`http://site.com/remote/login`.';
 $_lang['office_auth_err_key_required'] = 'You must specify the same nonempty keys at server and client for protect user data. For example "&key=`8Hy76Jkw`".';
-$_lang['office_auth_err_ha_disabled'] = 'You must first bind to this socket to your account!';
+$_lang['office_auth_err_ha_disabled'] = 'You must first bind this social network to your account!';
 $_lang['office_auth_success'] = 'You have successfully logged on the website!';
 
 $_lang['office_auth_email_send'] = 'Login link on the site sent. Check your email.';

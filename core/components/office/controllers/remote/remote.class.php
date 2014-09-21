@@ -93,7 +93,6 @@ class officeRemoteAuthController extends officeAuthController {
 			curl_setopt($ch, CURLOPT_URL, urldecode($remote));
 			curl_setopt($ch, CURLOPT_HEADER, 0);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
 			curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 			curl_setopt($ch, CURLOPT_REFERER, $this->modx->makeUrl($this->modx->getOption('site_start'),'','','full'));
 			if (!@ini_get('safe_mode') && !@ini_get('open_basedir')) {
