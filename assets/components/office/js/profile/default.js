@@ -51,6 +51,13 @@ Office.Profile = {
 											$('#office-user-photo-remove').hide();
 										}
 									}
+									else if (i == 'extended') {
+										for (var i2 in response.data[i]) {
+											if (response.data[i].hasOwnProperty(i2)) {
+												$(selector + ' [name="extended['+i2+']"]').val(response.data[i][i2]);
+											}
+										}
+									}
 								}
 							}
 						}

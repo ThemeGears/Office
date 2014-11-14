@@ -67,7 +67,9 @@ class officeProfileUserUpdateProcessor extends modUserUpdateProcessor {
 		}
 		// Add existing extended fields
 		if ($extended = $this->getProperty('extended')) {
-			$extended = array_merge($this->object->Profile->get('extended'), $extended);
+			if ($existing = $this->object->Profile->get('extended')) {
+				$extended = array_merge($existing, $extended);
+			}
 			$this->setProperty('extended', $extended);
 		}
 		// Handle new password
