@@ -17,8 +17,8 @@ if ($object->xpdo) {
 		/* Checking and installing required packages */
 			$packages = array(
 				'HybridAuth' => array(
-					'version_major' => 0,
-					'version_minor:>=' =>  7,
+					'version_major' => 1,
+					'version_minor:>=' =>  0,
 				)
 			);
 
