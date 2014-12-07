@@ -30,8 +30,9 @@ class officeMS2Controller extends officeDefaultController {
 
 	public function defaultAction() {
 		if (!$this->modx->user->isAuthenticated($this->modx->context->key)) {
-			//$this->modx->sendUnauthorizedPage();
-			return '';
+			return $this->modx->user->isAuthenticated('mgr')
+				? $this->modx->lexicon('office_err_mgr_auth')
+				: '';
 		}
 		else {
 			$config = $this->office->makePlaceholders($this->office->config);

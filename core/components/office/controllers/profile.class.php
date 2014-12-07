@@ -74,7 +74,11 @@ class officeProfileController extends officeDefaultController {
 			$this->config['page_id'] = $this->modx->resource->id;
 		}
 
-		if (!$this->modx->user->isAuthenticated($this->modx->context->key)) {return '';}
+		if (!$this->modx->user->isAuthenticated($this->modx->context->key)) {
+			return $this->modx->user->isAuthenticated('mgr')
+				? $this->modx->lexicon('office_err_mgr_auth')
+				: '';
+		}
 
 		$config = $this->office->makePlaceholders($this->office->config);
 		if ($css = trim($this->modx->getOption('office_profile_frontend_css', null, '[[+cssUrl]]profile/default.css'))) {
