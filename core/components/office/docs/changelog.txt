@@ -4,6 +4,7 @@ Changelog for Office.
 ==============
 - Fixed retrieving of modMail ErrorInfo.
 - Improved creating of system settings.
+- [#10] [miniShop2] Fixed order log pagination.
 
 1.1.5-pl1
 ==============

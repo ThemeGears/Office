@@ -241,6 +241,7 @@ OfficeMS2.window.ViewOrder = function(config) {
 			,items: this.getTabs(config)
 		}
 		,buttons: [{text: _('close'),scope: this,handler: function() {this.hide();}}]
+		,keys: []
 	});
 	OfficeMS2.window.ViewOrder.superclass.constructor.call(this,config);
 
