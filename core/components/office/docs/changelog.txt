@@ -1,12 +1,15 @@
 Changelog for Office.
 
-1.1.6-pl1
+1.1.7-pl
+==============
+- Added call of system event on user activation.
+- [Remote] Changed log level to "error".
+
+1.1.6-pl
 ==============
 - Fixed retrieving of modMail ErrorInfo.
 - Improved creating of system settings.
 - [#10] [miniShop2] Fixed order log pagination.
-- Added call of system event on user activation.
-- [Remote] Changed log level to "error".
 
 1.1.5-pl1
 ==============
