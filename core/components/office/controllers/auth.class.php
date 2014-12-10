@@ -328,7 +328,13 @@ class officeAuthController extends officeDefaultController {
 			if ($activate === true) {
 				if (!$user->get('active')) {
 					$user->set('active', true);
-					$user->save();
+					if ($user->save()) {
+						$this->modx->invokeEvent('OnUserActivate', array(
+                					'id' => $user->id,
+                        				'user' => &$user,
+                        				'mode' => modSystemEvent::MODE_UPD,
+                    				));
+					}
 				}
 
 				$login_data = array(
