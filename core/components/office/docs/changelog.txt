@@ -1,5 +1,10 @@
 Changelog for Office.
 
+1.1.6-pl
+==============
+- Fixed retrieving of modMail ErrorInfo.
+- Improved creating of system settings.
+
 1.1.5-pl1
 ==============
 - [Profile] Improved handling of extended fields.

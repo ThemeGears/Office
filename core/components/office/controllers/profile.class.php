@@ -311,7 +311,7 @@ class officeProfileController extends officeDefaultController {
 		$mail->address('reply-to', $this->modx->getOption('emailsender'));
 		$mail->setHTML(true);
 		$response = !$mail->send()
-			? $mail->mailer->errorInfo
+			? $mail->mailer->ErrorInfo
 			: true;
 		$mail->reset();
 
