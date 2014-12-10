@@ -474,7 +474,7 @@ class officeAuthController extends officeDefaultController {
 		);
 
 		if ($send !== true) {
-			$errors = $this->modx->mail->mailer->errorInfo;
+			$errors = $this->modx->mail->mailer->ErrorInfo;
 			$this->modx->log(modX::LOG_LEVEL_ERROR, '[Office] Unable to send email to '.$email.'. Message: '.$errors);
 			return $this->error($this->modx->lexicon('office_auth_err_send', array('errors' => $errors)));
 		}
