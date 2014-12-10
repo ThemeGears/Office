@@ -168,7 +168,7 @@ class officeRemoteAuthController extends officeAuthController {
 				}
 			}
 			else {
-				$this->modx->log(modX::LOG_LEVEL_INFO, '[Office] Could not login user: remote server returned status "'.curl_getinfo($ch, CURLINFO_HTTP_CODE).'".');
+				$this->modx->log(modX::LOG_LEVEL_ERROR, '[Office] Could not remote login user: '.print_r(curl_getinfo($ch), 1));
 			}
 			curl_close($ch);
 		}

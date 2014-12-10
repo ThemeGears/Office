@@ -6,6 +6,7 @@ Changelog for Office.
 - Improved creating of system settings.
 - [#10] [miniShop2] Fixed order log pagination.
 - Added call of system event on user activation.
+- [Remote] Changed log level to "error".
 
 1.1.5-pl1
 ==============
