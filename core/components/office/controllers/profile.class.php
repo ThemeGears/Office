@@ -69,6 +69,8 @@ class officeProfileController extends officeDefaultController {
 			// It will be updated on every snippet call
 			$setting->fromArray($key, '', true, true);
 			$setting->set('value', $this->modx->resource->id);
+			$setting->set('namespace', 'office');
+			$setting->set('area', 'office_profile');
 			$setting->save();
 
 			$this->config['page_id'] = $this->modx->resource->id;
