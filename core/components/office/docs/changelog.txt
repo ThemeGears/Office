@@ -1,5 +1,9 @@
 Changelog for Office.
 
+1.1.8-pl
+==============
+- [Profile] Fixed removing old photos from "avatarPath".
+
 1.1.7-pl
 ==============
 - Added call of system event on user activation.
