@@ -168,7 +168,7 @@ class officeRemoteAuthController extends officeAuthController {
 				}
 			}
 			else {
-				$this->modx->log(modX::LOG_LEVEL_ERROR, '[Office] Could not remote login user: '.print_r(curl_getinfo($ch), 1));
+				$this->modx->log(modX::LOG_LEVEL_ERROR, '[Office] Could not remote login user: "'.curl_error($ch).'"' . print_r(curl_getinfo($ch), 1));
 			}
 			curl_close($ch);
 		}

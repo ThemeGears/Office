@@ -209,7 +209,7 @@ class officeAuthController extends officeDefaultController {
 			$response = $this->modx->runProcessor('security/login', $login_data);
 			if ($response->isError()) {
 				$errors = $this->_formatProcessorErrors($response);
-				$this->modx->log(modX::LOG_LEVEL_ERROR, '[Office] unable to login user '.$data['email'].'. Message: '.$errors);
+				$this->modx->log(modX::LOG_LEVEL_ERROR, '[Office] unable to login user "'.$data['username'].'". Message: '.$errors);
 
 				return $this->error($this->modx->lexicon('office_auth_err_login', array('errors' => $errors)));
 			}
@@ -541,7 +541,7 @@ class officeAuthController extends officeDefaultController {
 
 		if ($response->isError()) {
 			$errors = $this->_formatProcessorErrors($response);
-			$this->modx->log(modX::LOG_LEVEL_ERROR, '[Office] Unable to create user '.$email.'. Message: '.$errors);
+			$this->modx->log(modX::LOG_LEVEL_ERROR, '[Office] Unable to create user "'.$username.'". Message: '.$errors);
 
 			return $this->error($this->modx->lexicon('office_auth_err_create', array('errors' => $errors)));
 		}

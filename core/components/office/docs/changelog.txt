@@ -1,8 +1,9 @@
 Changelog for Office.
 
-1.1.8-pl
+1.1.8-pl1
 ==============
 - [Profile] Fixed removing old photos from "avatarPath".
+- [Auth] Fixed some log entries.
 
 1.1.7-pl
 ==============
