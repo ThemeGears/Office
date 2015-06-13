@@ -1,5 +1,9 @@
 Changelog for Office.
 
+1.1.9-pl1
+==============
+- Updated HybridAuth version in the installer.
+
 1.1.8-pl1
 ==============
 - [Profile] Fixed removing old photos from "avatarPath".
