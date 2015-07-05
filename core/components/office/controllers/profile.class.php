@@ -95,7 +95,7 @@ class officeProfileController extends officeDefaultController {
 			if ($this->modx->loadClass('hybridauth', MODX_CORE_PATH . 'components/hybridauth/model/hybridauth/', false, true)) {
 				$HybridAuth = new HybridAuth($this->modx, $this->config);
 				$HybridAuth->initialize($this->modx->context->key);
-				$pls['providers'] = $HybridAuth->getProvidersLinks();
+				$pls['providers'] = $HybridAuth->getProvidersLinks($this->config['providerTpl'], $this->config['activeProviderTpl']);
 			}
 		}
 
